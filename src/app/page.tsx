@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import RecommendedServices from "../components/RecommendedServices";
 import PopularWorkers from "../components/popularWorkers";
 import Testimonials from "../components/Testimonial";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const services = [
@@ -187,6 +188,7 @@ export default function Home() {
       </div>
 
       <Testimonials />
+      <Footer />
     </>
 
 
