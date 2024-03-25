@@ -4,26 +4,26 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function RecommendedServices() {
+export default function PopularServices() {
     const services = [
         {
-            name: "Mobile Devices Repair",
-            price: "Starting at Rs.5000",
-            imageUrl: "/images/mobile-service-img.png" // Replace with the path to your image
+            name: "BabySitting",
+            price: "Starting at $10/hr",
+            imageUrl: "/images/baby-sitting.png" // Replace with the path to your image
         },
         {
-            name: "House Cleaning",
-            price: "Starting at Rs.2500",
-            imageUrl: "/images/house-cleaning-img.png"
+            name: "Bridal Makeup",
+            price: "Starting at 100$",
+            imageUrl: "/images/bridal-makeup.png"
+        },
+        {
+            name: "IELTS Tutoring",
+            price: "Starting at 50$",
+            imageUrl: "/images/ilets-tutor.png"
         },
         {
             name: "Organizing Birthday parties",
-            price: "Starting at Rs.10,000",
-            imageUrl: "/images/birthday-party-img.png"
-        },
-        {
-            name: "Organizing Birthday parties",
-            price: "Starting at Rs.10,000",
+            price: "Starting at 60$",
             imageUrl: "/images/birthday-party-img.png"
         },
     ];
@@ -54,8 +54,8 @@ export default function RecommendedServices() {
     };
 
     return (
-        <div className="mx-auto mt-4 py-4 md:py-6 max-w-screen-2xl px-2 md:px-28">
-            <h2 className="text-lg pl-4 font-bold md:mb-6 mb-2 text-left text-black">Recommended Services</h2>
+        <div className="mx-auto mt-4 py-4 md:py-6 max-w-screen-2xl px-2 md:px-28 mb-8">
+            <h2 className="text-lg pl-4 font-bold md:mb-6 mb-2 text-left text-black">Popular Services</h2>
             <Slider {...settings}>
                 {services.map((service, index) => (
                     <div key={index} className="p-4">

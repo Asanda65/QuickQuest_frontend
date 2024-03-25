@@ -10,7 +10,7 @@ const Footer = () => {
                     <h2 className="text-2xl font-bold mb-6">QuickQuest</h2>
                     <p className="mb-4">Our vision is to provide convenience and help increase your sales business.</p>
                     <div className="flex ">
-                        <div className="flex ">
+                        <div className="flex">
                             <img src='/images/facebook.svg'></img>
                             <img src='/images/instagram.svg'></img>
                             <img src='/images/twitter.svg'></img>
@@ -46,10 +46,10 @@ const Footer = () => {
                 </div>
             </div>
             <div className="max-w-6xl mx-auto flex justify-between items-center border-t border-white mt-8 pt-4">
-                <p>©2024 QuickQuest. All rights reserved</p>
+                <p className='text-sm md:text-base'>©2024 QuickQuest. All rights reserved</p>
                 <div className="flex space-x-4">
-                    <Link href="/privacy-policy"><span>Privacy & Policy</span></Link>
-                    <Link href="/terms-and-conditions"><span>Terms & Condition</span></Link>
+                    <Link href="/privacy-policy"><span className='text-sm md:text-base'>Privacy & Policy</span></Link>
+                    <Link href="/terms-and-conditions"><span className='text-sm md:text-base'>Terms & Condition</span></Link>
                 </div>
             </div>
         </footer>
