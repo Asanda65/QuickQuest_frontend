@@ -108,7 +108,9 @@ export default function PopularWorkers() {
                                 </div>
                                 <p className="font-semibold text-base text-black mb-2">Tasks:</p>
                                 <div className="flex justify-center mb-4 space-x-2">
-                                    {/* Icons for tasks */}
+                                    <img src="/images/construction-icon.png" alt="Construction" className="h-5 w-5" />
+                                    <img src="/images/cleaning-icon.png" alt="Cleaning" className="h-5 w-5" />
+
                                 </div>
                                 <button className="bg-teal-500 text-white px-8 py-2 rounded-md">Hire</button>
                             </div>
