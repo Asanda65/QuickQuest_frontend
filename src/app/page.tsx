@@ -5,6 +5,8 @@ import PopularWorkers from "../components/popularWorkers";
 import PopularServices from "../components/poplarServices";
 import Testimonials from "../components/Testimonial";
 import Footer from "../components/Footer";
+import '../styles/globals.css';
+
 
 export default function Home() {
 
