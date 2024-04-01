@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from "./../components/Navbar";
 import Footer from "./../components/Footer";
+import Link from 'next/link';
 import { FaGoogle, FaApple, FaFacebook } from 'react-icons/fa';
 import '../styles/globals.css';
 
@@ -41,9 +42,11 @@ export default function Login() {
                                     </label>
                                 </div>
                                 <div className="text-sm">
-                                    <a href="/forgotPassword" className="font-medium text-teal-600 hover:text-teal-500">
-                                        Forgot password?
-                                    </a>
+                                    <Link href="/forgotPassword">
+                                        <span className="cursor-pointer font-medium text-teal-600 hover:text-teal-500">
+                                            Forgot password?
+                                        </span>
+                                    </Link>
                                 </div>
                             </div>
                             <div>
@@ -70,9 +73,9 @@ export default function Login() {
                             <div className="mt-4">
                                 <p className="text-center text-sm text-gray-600">
                                     Dont have an account?
-                                    <a href="#" className="font-medium text-teal-600 hover:text-teal-500">
-                                        <span className="ml-1">Sign up</span>
-                                    </a>
+                                    <Link href="/signup">
+                                        <span className="ml-1 font-medium text-teal-600 hover:text-teal-500 cursor-pointer">Sign up</span>
+                                    </Link>
                                 </p>
                             </div>
                         </div>
