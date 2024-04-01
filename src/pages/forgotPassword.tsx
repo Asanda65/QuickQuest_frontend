@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Navbar from "./../components/Navbar";
 import Footer from "./../components/Footer";
+import Link from 'next/link';
 import '../styles/globals.css';
 
 export default function ForgotPassword() {
@@ -37,10 +38,10 @@ export default function ForgotPassword() {
                                 className="w-full p-2 mt-1 mb-2 border focus:outline-none focus:ring-teal-500 focus:border-teal-500 rounded-md"
                                 placeholder="Enter your email"
                             />
-                            <button
-                                className="mt-2 px-4 py-2 text-white bg-teal-500 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
-                            >
-                                <a href="/forgotPasswordVerification"> Send OTP</a>
+                            <button className="mt-2 px-4 py-2 text-white bg-teal-500 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50">
+                                <Link href="/forgotPasswordVerification">
+                                    <span className="block w-full h-full text-center">Send OTP</span>
+                                </Link>
                             </button>
                         </div>
                     </div>
