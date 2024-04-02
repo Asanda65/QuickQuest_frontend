@@ -83,10 +83,11 @@ export default function SignUp() {
                         <p className="text-center text-sm text-gray-600 mb-4">
                             By clicking Create Account, you agree to the Terms of Use and Privacy Policy.
                         </p>
-
-                        <button className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
-                            Create Account
-                        </button>
+                        <Link href="/verifyEmail">
+                            <button className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
+                                Create Account
+                            </button>
+                        </Link>
 
                         <p className="text-center text-sm text-black">
                             Already have an account?{' '}
