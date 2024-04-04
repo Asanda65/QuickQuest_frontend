@@ -1,9 +1,11 @@
 import React from 'react';
 import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import '../styles/globals.css';
+import Link from 'next/link';
 import Navbar from "./../components/Navbar";
 import Footer from "./../components/Footer";
 import LabourPageServices from "./../components/servicesLabourPublic";
+import CustomerFeedback from "../components/customerFeedback";
 
 const LabourPublicPage = () => {
   const worker = {
@@ -68,6 +70,18 @@ const LabourPublicPage = () => {
 
       </div>
       <LabourPageServices />
+      <div className="flex flex-col items-center justify-center flex-grow mb-6">
+
+
+        <Link href="/servicePage">
+          <button className="border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white font-semibold py-1.5 px-8 rounded-md  mb-2 transition ease-in duration-200">
+            View All
+          </button>
+        </Link>
+
+      </div>
+      <CustomerFeedback />
+
       <Footer />
     </>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/globals.css';
 
 
 export default function LabourPageServices() {
@@ -22,7 +23,7 @@ export default function LabourPageServices() {
     ];
 
     return (
-        <div className="mx-auto mt-4 py-4 md:py-6 max-w-screen-2xl px-2 md:px-20">
+        <div className="mx-auto mt-4 py-4 md:py-2 max-w-screen-2xl px-2 md:px-20">
             <h2 className="text-lg pl-4 font-medium md:mb-6 mb-2 text-left text-black">Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {services.map((service, index) => (
