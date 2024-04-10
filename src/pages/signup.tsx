@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import '../styles/globals.css';
+import LocationPicker from "./../components/signupLocationInput";
 
 
 export default function SignUp() {
@@ -13,9 +14,10 @@ export default function SignUp() {
 
     return (
         <>
-            <div className='flex flex-col h-screen md:min-h-screen'>
+            <div className='flex flex-col'>
                 <Navbar />
                 <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6">
+                    <div className='mt-6'></div>
                     <h1 className="text-lg font-meduim text-black">Get Started</h1>
                     <p className="text-center text-base my-2 mb-4" style={{ color: "#02615D" }}>Welcome to QuickQuest - let’s create your account</p>
                     <div className="relative flex flex-col items-center justify-center w-24 h-24 rounded-full overflow-hidden">
@@ -34,7 +36,7 @@ export default function SignUp() {
                     </div>
 
 
-                    <div className="w-full max-w-lg">
+                    <div className="w-full max-w-lg text-black">
                         <div className="flex gap-4 mb-1">
                             <div className="w-1/2">
                                 <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
@@ -61,7 +63,9 @@ export default function SignUp() {
                             <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
                         </div>
 
-                        <div className="flex flex-col mb-4">
+
+
+                        {/* <div className="flex flex-col mb-4">
                             <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
                             <div className="relative mt-1">
                                 <input
@@ -74,9 +78,10 @@ export default function SignUp() {
                                     <FontAwesomeIcon icon={faCrosshairs} className="w-5 h-5 text-white mx-3" />
                                 </div>
                             </div>
+                        </div> */}
 
 
-                        </div>
+                        <LocationPicker />
 
                         <hr className="border-gray-300 my-4" />
 
@@ -92,12 +97,13 @@ export default function SignUp() {
                         <p className="text-center text-sm text-black">
                             Already have an account?{' '}
                             <Link href="/login">
-                                <span className="text-teal-600 hover:text-teal-500">Log in.</span>
+                                <span className="text-teal-600 hover:text-teal-500 mb-4">Log in.</span>
                             </Link>
                         </p>
                     </div>
                 </div>
 
+                <div className='mt-6'></div>
                 <Footer />
             </div>
         </>
