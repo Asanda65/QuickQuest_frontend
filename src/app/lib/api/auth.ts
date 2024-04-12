@@ -11,7 +11,7 @@ interface LoginResponse {
 }
 
 export async function loginUser(email: string, password: string): Promise<string> {
-  const response = await axios.post<LoginResponse>('https://api.quick-quest.dfanso.dev/v1/auth/login', {
+  const response = await axios.post<LoginResponse>(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/login`, {
     email,
     password,
   });
@@ -19,7 +19,7 @@ export async function loginUser(email: string, password: string): Promise<string
 }
 
 export async function fetchUserProfile(token: string): Promise<User> {
-  const response = await axios.get<User>('https://api.quick-quest.dfanso.dev/v1/auth/profile', {
+  const response = await axios.get<User>(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
