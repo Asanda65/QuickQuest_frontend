@@ -1,23 +1,27 @@
 'use client';
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer";
 import Link from 'next/link';
 import { FaGoogle, FaApple, FaFacebook } from 'react-icons/fa';
 import '../../globals.css';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useAuth } from '@/app/lib/contexts/AuthContext';
+import { useAuth } from '@/app/contexts/AuthContext';
 import { fetchUserProfile, loginUser } from '@/app/lib/api/auth';
-
+import { useRouter } from 'next/navigation';
+import { ThreeDots } from 'react-loader-spinner';
 
 
 
 export default function Login() {
-  const { dispatch } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { state,dispatch } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setLoading(true);
 
     try {
       const token = await loginUser(
@@ -27,7 +31,6 @@ export default function Login() {
       localStorage.setItem('token', token);
 
       const user = await fetchUserProfile(token);
-      dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 
       Swal.fire({
         icon: 'success',
@@ -35,8 +38,7 @@ export default function Login() {
         text: 'You have successfully logged in.',
         confirmButtonColor: '#14b8a6',
       }).then(() => {
-        // Redirect to a logged-in page or update app state
-        // ...
+        router.push('/');
       });
     } catch (error) {
       console.error('Login failed:', error);
@@ -46,11 +48,14 @@ export default function Login() {
         text: 'Invalid email or password. Please try again.',
         confirmButtonColor: '#14b8a6',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+    
       <div className='flex flex-col h-screen'>
         <Navbar />
         <div className="flex-grow flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
@@ -60,6 +65,11 @@ export default function Login() {
                 Welcome Back
               </h2>
             </div>
+            {loading ? (
+              <div className="flex items-center justify-center ">
+              <ThreeDots color="#4FB8B3" height={80} width={80} />
+            </div>
+            ) : (
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <input type="hidden" name="remember" defaultValue="true" />
               <div className="rounded-md shadow-sm -space-y-px">
@@ -99,6 +109,7 @@ export default function Login() {
                 </button>
               </div>
             </form>
+            )}
             <div className="text-sm text-center mt-2 mb-2 text-gray-600">OR</div>
             <div className="flex flex-col space-y-3">
               <button className="group relative w-full flex justify-center items-center py-2 px-4 border border-black text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-md">
@@ -115,7 +126,7 @@ export default function Login() {
               </button>
               <div className="mt-4">
                 <p className="text-center text-sm text-gray-600">
-                  Don't have an account?
+                  Do not have an account?
                   <Link href="/signup">
                     <span className="ml-1 font-medium text-teal-600 hover:text-teal-500 cursor-pointer">
                       Sign up

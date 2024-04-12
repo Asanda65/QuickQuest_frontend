@@ -1,5 +1,5 @@
 import { createContext, useReducer, useContext, useEffect } from 'react';
-import { fetchUserProfile } from '../api/auth';
+import { fetchUserProfile } from '../lib/api/auth';
 import React, { ReactNode } from 'react';
 
 
@@ -14,20 +14,23 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
+  loading: boolean;
 }
 
 type AuthAction =
+  | { type: 'LOGIN_REQUEST' }
   | { type: 'LOGIN_SUCCESS'; payload: User }
+  | { type: 'LOGIN_FAILURE' }
   | { type: 'LOGOUT' };
 
-const initialState: AuthState = {
-  isAuthenticated: false,
-  user: null,
-};
+  const initialState: AuthState = {
+    isAuthenticated: false,
+    user: null,
+    loading: false,
+  };
 
 const AuthContext = createContext<{
   state: AuthState;
@@ -39,11 +42,23 @@ const AuthContext = createContext<{
 
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
+    case 'LOGIN_REQUEST':
+      console.log('LOGIN_REQUEST action dispatched');
+      return {
+        ...state,
+        loading: true,
+      };
     case 'LOGIN_SUCCESS':
       return {
         ...state,
         isAuthenticated: true,
         user: action.payload,
+        loading: false,
+      };
+    case 'LOGIN_FAILURE':
+      return {
+        ...state,
+        loading: false,
       };
     case 'LOGOUT':
       return {
