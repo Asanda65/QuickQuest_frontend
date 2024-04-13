@@ -50,6 +50,7 @@ export default function Login() {
       );
       localStorage.setItem('token', token);
 
+      console.log(token);
       const fetchedUser = await fetchUserProfile(token);
       setUser(fetchedUser);
 

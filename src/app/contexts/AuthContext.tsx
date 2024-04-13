@@ -2,9 +2,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
-  id: string;
-  name: string;
+  location: {
+    type: string;
+    coordinates: number[];
+  };
+  _id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  aboutMe: string;
+  services: any[];
+  type: string;
+  status: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 interface AuthContextProps {
