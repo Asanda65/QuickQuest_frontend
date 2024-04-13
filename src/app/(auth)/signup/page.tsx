@@ -13,7 +13,6 @@ export default function SignUp() {
     return (
         <>
             <div className='flex flex-col'>
-                <Navbar />
                 <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6">
                     <div className='mt-6'></div>
                     <h1 className="text-lg font-meduim text-black">Get Started</h1>
@@ -102,7 +101,7 @@ export default function SignUp() {
                 </div>
 
                 <div className='mt-6'></div>
-                <Footer />
+
             </div>
         </>
     );
