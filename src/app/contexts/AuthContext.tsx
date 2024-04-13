@@ -1,98 +1,62 @@
-import { createContext, useReducer, useContext, useEffect } from 'react';
-import { fetchUserProfile } from '../lib/api/auth';
-import React, { ReactNode } from 'react';
-
+'use client';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
   id: string;
   name: string;
   email: string;
-
 }
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-interface AuthState {
-  isAuthenticated: boolean;
+interface AuthContextProps {
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-type AuthAction =
-  | { type: 'LOGIN_REQUEST' }
-  | { type: 'LOGIN_SUCCESS'; payload: User }
-  | { type: 'LOGIN_FAILURE' }
-  | { type: 'LOGOUT' };
-
-  const initialState: AuthState = {
-    isAuthenticated: false,
-    user: null,
-    loading: false,
-  };
-
-const AuthContext = createContext<{
-  state: AuthState;
-  dispatch: React.Dispatch<AuthAction>;
-}>({
-  state: initialState,
-  dispatch: () => null,
+const AuthContext = createContext<AuthContextProps>({
+  user: null,
+  setUser: () => {},
+  loading: true,
+  setLoading: () => {},
 });
 
-const authReducer = (state: AuthState, action: AuthAction): AuthState => {
-  switch (action.type) {
-    case 'LOGIN_REQUEST':
-      console.log('LOGIN_REQUEST action dispatched');
-      return {
-        ...state,
-        loading: true,
-      };
-    case 'LOGIN_SUCCESS':
-      return {
-        ...state,
-        isAuthenticated: true,
-        user: action.payload,
-        loading: false,
-      };
-    case 'LOGIN_FAILURE':
-      return {
-        ...state,
-        loading: false,
-      };
-    case 'LOGOUT':
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null,
-      };
-    default:
-      return state;
-  }
-};
+export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUserProfile(token)
-        .then((user) => {
-          dispatch({ type: 'LOGIN_SUCCESS', payload: user });
-        })
-        .catch((error) => {
-          console.error('Failed to fetch user profile:', error);
-          localStorage.removeItem('token');
-        });
-    }
+    const checkUserAuthentication = async () => {
+      try {
+        // Retrieve user from local storage on app initialization
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error('Error retrieving user from local storage:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkUserAuthentication();
   }, []);
 
+  useEffect(() => {
+    // Update local storage whenever user state changes
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ state, dispatch }}>
+    <AuthContext.Provider value={{ user, setUser, loading, setLoading }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

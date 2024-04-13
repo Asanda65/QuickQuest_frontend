@@ -1,8 +1,9 @@
+"use client"
 import React, { useState, useEffect } from 'react';
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import Footer from "../../../components/Footer";
+import Navbar from "../../../components/Navbar";
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import '../styles/globals.css';
+import '../../globals.css';
 
 const OrderCard = ({ profilePic, name, task, dueDate, price }) => {
   return (
@@ -75,7 +76,6 @@ const UserProfilePage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="text-black mt-6">
         <img src="/images/test-prof-1.png" alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center" />
         <h1 className="text-xl font-medium mt-4 text-center">Ambala Anuhas</h1>
@@ -109,7 +109,6 @@ const UserProfilePage = () => {
           <div className='mb-12'></div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

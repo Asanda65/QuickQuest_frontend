@@ -7,13 +7,13 @@ import { FaGoogle, FaApple, FaFacebook } from 'react-icons/fa';
 import '../../globals.css';
 import Swal from 'sweetalert2';
 import { useAuth } from '@/app/contexts/AuthContext';
-import { fetchUserProfile, loginUser } from '@/app/lib/api/auth';
+import { loginUser, fetchUserProfile } from '@/app/lib/api/auth';
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const { state,dispatch } = useAuth();
+  const { setUser } = useAuth();
   const router = useRouter();
   const [errors, setErrors] = useState({
     email: '',
@@ -50,7 +50,8 @@ export default function Login() {
       );
       localStorage.setItem('token', token);
 
-      const user = await fetchUserProfile(token);
+      const fetchedUser = await fetchUserProfile(token);
+      setUser(fetchedUser);
 
       Swal.fire({
         icon: 'success',
@@ -73,10 +74,10 @@ export default function Login() {
     }
   };
 
+
   return (
     <>
       <div className='flex flex-col h-screen'>
-        <Navbar />
         <div className="flex-grow flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
             <div>
@@ -181,7 +182,6 @@ export default function Login() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

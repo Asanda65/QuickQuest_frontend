@@ -16,7 +16,6 @@ export default function Home() {
 
     <>
 
-      <Navbar />
 
       <div className="">
         <div className="flex justify-center items-center space-x-0 mt-4 py-6 md:py-8">
@@ -246,7 +245,6 @@ export default function Home() {
       </div>
 
       <Testimonials />
-      <Footer />
     </>
 
 
