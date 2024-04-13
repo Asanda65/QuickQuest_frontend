@@ -1,17 +1,15 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Navbar from "./../components/Navbar";
-import Footer from "./../components/Footer";
+import Navbar from "../../../components/Navbar";
+import Footer from "../../../components/Footer";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
-import '../styles/globals.css';
-import LocationPicker from "./../components/signupLocationInput";
+import '../../globals.css';
+import LocationPicker from "../../../components/signupLocationInput";
+
 
 
 export default function SignUp() {
-    const router = useRouter();
-
     return (
         <>
             <div className='flex flex-col'>

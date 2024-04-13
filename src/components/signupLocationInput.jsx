@@ -1,8 +1,9 @@
+'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyB9vm3yMZrnPfRTBAG0XRep4hcR6GCKE5s';
+
 
 const LocationPicker = () => {
     const [showMap, setShowMap] = useState(false);
@@ -16,7 +17,7 @@ const LocationPicker = () => {
             initializeAutocomplete();
         } else {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_API_KEY}&libraries=places`;
             script.async = true;
             document.body.appendChild(script);
             script.onload = () => {
