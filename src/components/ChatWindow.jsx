@@ -47,7 +47,7 @@ export default function ChatWindow({ activeChat }) {
 
 
     return (
-        <div className="flex flex-col h-full w-full p-4 ml-4" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
+        <div className="flex m-2 flex-col h-full w-full p-4" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
             {/* Chat header */}
             {activeChat && (
                 <div className="flex justify-between items-center p-2 border-b border-gray-300">

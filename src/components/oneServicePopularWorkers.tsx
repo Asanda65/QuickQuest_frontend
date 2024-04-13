@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-export default function PopularWorkers() {
+export default function OneServicePopularWorkers() {
     const workers = [
         {
             name: "Mahinda Rajapaksha",
@@ -86,13 +86,13 @@ export default function PopularWorkers() {
     };
 
     return (
-        <div className="container mx-auto px-4 lg:px-28 py-6">
-            <h2 className="text-lg font-bold mb-6 text-left pl-4 text-black">Popular Workers near you</h2>
+        <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-6">
+            <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black"></h2>
             {/* Slider wrapper */}
             <Slider {...settings}>
                 {workers.map((worker, index) => (
                     <div key={index} className="px-4">
-                        <div className="bg-white rounded-lg shadow-md text-center relative mb-4 mt-2">
+                        <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
                             <img
                                 src={worker.imageUrl}
                                 alt={worker.name}

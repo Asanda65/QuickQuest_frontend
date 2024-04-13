@@ -6,6 +6,7 @@ import Footer from "./../components/Footer";
 import '../styles/globals.css';
 import ServicePopularWorkers from "../components/oneServiceWorkers";
 import PopularWorkersOneService from "../components/popularWorkersOneService";
+import OneServicePopularWorkers from "../components/oneServicePopularWorkers";
 
 const OneServicePage = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -72,7 +73,7 @@ const OneServicePage = () => {
                             onClick={toggleDropdown}
                             className="inline-flex items-center border border-teal-500 bg-white px-2 py-1 rounded-md cursor-pointer"
                         >
-                            <span className="text-teal-500 mr-1">Highest Rating</span>
+                            <span className="text-teal-500 mr-1 text-xs md:text-base">Highest Rating</span>
                             <FaCaretDown className='text-teal-500' />
                         </div>
 
@@ -90,9 +91,14 @@ const OneServicePage = () => {
 
             </div>
 
-            <PopularWorkersOneService />
+            {/* <PopularWorkersOneService />
             <div className='mt-4'></div>
-            <PopularWorkersOneService />
+            <PopularWorkersOneService /> */}
+
+            <OneServicePopularWorkers />
+            <div className='mt-4'></div>
+            {/* <OneServicePopularWorkers /> */}
+            <div className='mb-6'></div>
 
             <Footer />
         </>
