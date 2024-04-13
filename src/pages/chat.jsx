@@ -22,12 +22,14 @@ export default function ChatPage() {
             <Head>
                 <title>Chat Interface</title>
             </Head>
-            <Navbar />
-            <div className="flex h-screen mx-14 my-10 overflow-hidden">
-                {/* Pass setActiveChat to ChatSidebar to update the activeChat when a chat is selected */}
-                <ChatSidebar chats={defaultChats} onSelectChat={setActiveChat} />
-                {/* Pass the activeChat to ChatWindow to display the corresponding conversation */}
-                <ChatWindow activeChat={activeChat} />
+            <div className='flex flex-col h-screen'>
+                <Navbar />
+                <div className="flex h-screen  my-10 overflow-hidden align-center justify-center">
+                    {/* Pass setActiveChat to ChatSidebar to update the activeChat when a chat is selected */}
+                    <ChatSidebar chats={defaultChats} onSelectChat={setActiveChat} />
+                    {/* Pass the activeChat to ChatWindow to display the corresponding conversation */}
+                    <div className='mb-4'><ChatWindow activeChat={activeChat} /></div>
+                </div>
             </div>
             <Footer />
         </>

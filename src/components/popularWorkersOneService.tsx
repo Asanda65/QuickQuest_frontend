@@ -40,7 +40,7 @@ export default function PopularWorkersOneService() {
         <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {workers.map((worker, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-md text-center mt-8 md:mt-0 relative p-4">
+                    <div key={index} className="bg-white rounded-lg shadow-md text-center mt-8 md:mt-0 relative p-4 mb-4 mt-2">
                         <img
                             src={worker.imageUrl}
                             alt={worker.name}

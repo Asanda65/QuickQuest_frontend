@@ -92,7 +92,7 @@ export default function ServicePopularWorkers() {
             <Slider {...settings}>
                 {workers.map((worker, index) => (
                     <div key={index} className="px-4">
-                        <div className="bg-white rounded-lg shadow-md text-center relative">
+                        <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
                             <img
                                 src={worker.imageUrl}
                                 alt={worker.name}

@@ -20,7 +20,7 @@ export default function ChatSidebar({ onSelectChat }) {
     };
 
     return (
-        <div className="w-1/3 p-4 bg-white rounded-xl shadow" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
+        <div className="w-1/4 m-2 p-4 bg-white rounded-xl shadow" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
             <div className="flex items-center p-1 rounded" style={{ backgroundColor: 'rgba(79, 184, 179, 0.30)', color: '#173735' }}>
                 <FaSearch className="mr-2 text-teal-900" />
                 <input className="flex-grow rounded bg-transparent focus:outline-none placeholder-teal-900" placeholder="Search" />
