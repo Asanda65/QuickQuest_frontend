@@ -1,4 +1,5 @@
 "use client"
+"use client"
 import React, { useState, useEffect } from 'react';
 import Footer from "../../../components/Footer";
 import Navbar from "../../../components/Navbar";
@@ -22,6 +23,26 @@ const OrderCard = ({ profilePic, name, task, dueDate, price }) => {
         <button className="ml-2 bg-transparent hover:bg-red-500 text-red-500 duration-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded">
           Cancel
         </button>
+      </div>
+    </div>
+  );
+};
+
+
+const PastOrderCard = ({ profilePic, name, task, dueDate, price }) => {
+  return (
+    // Updated for responsiveness
+    <div className="flex flex-col sm:flex-row mt-4 mx-4 mx-20 items-center justify-between p-4 bg-white rounded text-black shadow" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
+      <img src={profilePic} alt={name} className="rounded-full h-12 w-12 mb-4 sm:mb-0" />
+      <span>{name}</span>
+      <span className="flex items-center">
+        <img src="/images/construction-icon.png" alt="Task Icon" className="h-6 w-6 mr-2" />
+        {task}
+      </span>
+      <span>Due on {dueDate}</span>
+      <span>{price}</span>
+      <div className='flex md:mt-0 mt-2'>
+        <button className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded">Delivered</button>
       </div>
     </div>
   );
@@ -97,7 +118,7 @@ const UserProfilePage = () => {
           ))}
           <h2 className="text-lg font-medium mt-8 mb-6 " style={{ textAlign: 'left' }}>Past Orders</h2>
           {pastOrders.map((order, index) => (
-            <OrderCard
+            <PastOrderCard
               key={index}
               profilePic={order.profilePic}
               name={order.name}
@@ -114,3 +135,4 @@ const UserProfilePage = () => {
 };
 
 export default UserProfilePage;
+

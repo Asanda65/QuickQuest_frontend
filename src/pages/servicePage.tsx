@@ -1,15 +1,18 @@
 import React from 'react';
 import Navbar from "./../components/Navbar";
 import Footer from "./../components/Footer";
-import '../styles/globals.css';
 import Link from 'next/link';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import '../styles/globals.css';
 
 export default function LabourPageServices() {
     const services = [
         {
             name: "Lawn mowing",
             price: "Starting at Rs.5000",
-            imageUrl: "/images/lawn-mowing.png" // Replace with the path to your image
+            imageUrl: "/images/lawn-mowing.png"
         },
         {
             name: "Hedge trimming",
@@ -21,14 +24,13 @@ export default function LabourPageServices() {
             price: "Starting at Rs.5000",
             imageUrl: "/images/garden-maintenance.png"
         },
-
     ];
 
     const categories = [
         {
             name: "Lawn mowing",
             price: "Starting at Rs.5000",
-            imageUrl: "/images/lawn-mowing.png" // Replace with the path to your image
+            imageUrl: "/images/lawn-mowing.png"
         },
         {
             name: "Hedge trimming",
@@ -43,7 +45,7 @@ export default function LabourPageServices() {
         {
             name: "Planting & garden design",
             price: "Starting at Rs.10000",
-            imageUrl: "/images/plant-garden-design.png" // Replace with the path to your image
+            imageUrl: "/images/plant-garden-design.png"
         },
         {
             name: "Irrigation systems installation and repair",
@@ -67,16 +69,25 @@ export default function LabourPageServices() {
         },
     ];
 
+    const sliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        adaptiveHeight: true,
+        centerMode: true, // Centers slides if they are less than the slider width
+    };
+
     return (
         <>
             <Navbar />
-            <div className="mx-auto mt-4 py-4 md:py-2 max-w-screen-2xl px-2 md:px-20">
+            <div className="mx-auto mt-4 py-4 max-w-screen-2xl px-4 sm:px-6 lg:px-8">
                 <h2 className="text-lg pl-4 font-medium text-left text-black">Popular Services</h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {services.map((service, index) => (
                         <Link key={index} href="/oneServicePage" passHref>
-                            <div key={index} className="p-4">
+                            <span className="block p-4">
                                 <div className="bg-white rounded-lg overflow-hidden shadow-md">
                                     <img src={service.imageUrl} alt={service.name} className="w-full h-60 object-cover" />
                                     <div className="p-4">
@@ -84,30 +95,41 @@ export default function LabourPageServices() {
                                         <p className="text-gray-500">{service.price}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </span>
                         </Link>
                     ))}
                 </div>
 
-            </div>
-
-            <div className="mx-auto mt-4 py-4 md:py-2 max-w-screen-2xl px-2 md:px-20">
-                <h2 className="text-lg pl-4 font-medium text-left text-black">Categories</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {categories.map((categorie, index) => (
+                <h2 className="text-lg pl-4 font-medium text-left text-black mt-8">Categories</h2>
+                <div className="block md:hidden md:mb-0 mb-6">
+                    <Slider {...sliderSettings}>
+                        {categories.map((category, index) => (
+                            <div key={index} className="p-4">
+                                <div className="bg-white rounded-lg overflow-hidden shadow-md">
+                                    <img src={category.imageUrl} alt={category.name} className="w-full h-60 object-cover" />
+                                    <div className="p-4">
+                                        <h3 className="text-lg font-medium text-black">{category.name}</h3>
+                                        <p className="text-gray-500">{category.price}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </Slider>
+                </div>
+                <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
+                    {categories.map((category, index) => (
                         <div key={index} className="p-4">
                             <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                                <img src={categorie.imageUrl} alt={categorie.name} className="w-full h-60 object-cover" />
+                                <img src={category.imageUrl} alt={category.name} className="w-full h-60 object-cover" />
                                 <div className="p-4">
-                                    <h3 className="text-lg font-medium text-black">{categorie.name}</h3>
-                                    <p className="text-gray-500">{categorie.price}</p>
+                                    <h3 className="text-lg font-medium text-black">{category.name}</h3>
+                                    <p className="text-gray-500">{category.price}</p>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
-            <div className='mb-2 md:mb-6'></div>
             <Footer />
         </>
     );
