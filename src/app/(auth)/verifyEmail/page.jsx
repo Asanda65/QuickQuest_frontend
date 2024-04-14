@@ -1,16 +1,16 @@
 "use client";
 import { useRouter } from 'next/navigation';
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
 import '../../globals.css';
-import Link from 'next/link';
 import { useState, useRef } from 'react';
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function VerifyEmail() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(Array(6).fill(''));
+  const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef([]);
 
   const handleEmailChange = (e) => {
@@ -33,12 +33,21 @@ export default function VerifyEmail() {
     }
   };
 
-  const handleResendOtp = () => {
-    // TODO: Implement resend OTP functionality
-    Swal.fire('OTP Resent', 'A new OTP has been sent to your email.', 'success');
+  const handleResendOtp = async () => {
+    setIsLoading(true);
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/request-verification-code`, {
+        email: email,
+      });
+      Swal.fire('OTP Resent', 'A new OTP has been sent to your email.', 'success');
+    } catch (error) {
+      console.error('Error resending OTP:', error);
+      Swal.fire('Error', 'An error occurred while resending the OTP.', 'error');
+    }
+    setIsLoading(false);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!validateEmail(email)) {
       Swal.fire('Invalid Email', 'Please enter a valid email address.', 'error');
       return;
@@ -49,8 +58,18 @@ export default function VerifyEmail() {
       return;
     }
 
-    // TODO: Implement OTP verification logic
-    router.push("/LabourPublicPage");
+    setIsLoading(true);
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/verify`, {
+        email: email,
+        confirmationCode: otp.join(''),
+      });
+      router.push("/");
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      Swal.fire('Error', 'An error occurred while verifying the OTP.', 'error');
+    }
+    setIsLoading(false);
   };
 
   const validateEmail = (email) => {
@@ -103,12 +122,18 @@ export default function VerifyEmail() {
                 Resend OTP
               </button>
             </div>
-            <button
-              onClick={handleConfirm}
-              className="w-full px-4 py-2 text-white bg-teal-500 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
-            >
-              Confirm
-            </button>
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <ThreeDots color="#4FB8B3" height={80} width={80} />
+              </div>
+            ) : (
+              <button
+                onClick={handleConfirm}
+                className="w-full px-4 py-2 text-white bg-teal-500 rounded-md hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
+              >
+                Confirm
+              </button>
+            )}
           </div>
         </div>
       </div>
