@@ -64,7 +64,7 @@ export default function VerifyEmail() {
         email: email,
         confirmationCode: otp.join(''),
       });
-      router.push("/");
+      router.push("/login");
     } catch (error) {
       console.error('Error verifying OTP:', error);
       Swal.fire('Error', 'An error occurred while verifying the OTP.', 'error');
