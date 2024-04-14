@@ -1,5 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface User {
   location: {
@@ -40,25 +41,34 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const checkUserAuthentication = async () => {
       try {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-          setUser(JSON.parse(storedUser));
+          const parsedUser: User = JSON.parse(storedUser);
+          setUser(parsedUser);
         }
       } catch (error) {
         console.error('Error retrieving user from local storage:', error);
       } finally {
         setTimeout(() => {
           setLoading(false);
-        }, 1000);
+        }, 1300);
       }
     };
 
     checkUserAuthentication();
   }, []);
+
+  useEffect(() => {
+    // Check if user status is UNVERIFIED and redirect to verifyEmail page
+    if (user && user.status === 'UNVERIFIED') {
+      router.push('/verifyEmail');
+    }
+  }, [user, router]);
 
   useEffect(() => {
     // Update local storage whenever user state changes
