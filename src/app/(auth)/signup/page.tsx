@@ -7,6 +7,7 @@ import LocationPicker from '../../../components/signupLocationInput';
 import uploadImage from '@/app/lib/api/uploadImage';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { ThreeDots } from 'react-loader-spinner';
 
 interface UserData {
   firstName: string;
@@ -22,16 +23,26 @@ interface UserData {
   profileImage: string;
 }
 
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Password validation regex
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 export default function SignUp() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
       setImagePreview(URL.createObjectURL(file));
+    } else {
+      setSelectedImage(null);
+      setImagePreview(null);
     }
   };
 
@@ -41,6 +52,7 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
 
     const form = event.target as HTMLFormElement;
     const firstName = (form.elements.namedItem('first-name') as HTMLInputElement).value;
@@ -52,11 +64,41 @@ export default function SignUp() {
     // Input validations
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       Swal.fire('Error', 'Please fill in all the required fields.', 'error');
+      setLoading(false);
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      Swal.fire('Error', 'Please enter a valid email address.', 'error');
+      setLoading(false);
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      Swal.fire(
+        'Error',
+        'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+        'error'
+      );
+      setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
       Swal.fire('Error', 'Passwords do not match.', 'error');
+      setLoading(false);
+      return;
+    }
+
+    if (!selectedImage) {
+      Swal.fire('Error', 'Please select an image.', 'error');
+      setLoading(false);
+      return;
+    }
+
+    if (!location || (location.lat === 0 && location.lng === 0)) {
+      Swal.fire('Error', 'Please select a valid location.', 'error');
+      setLoading(false);
       return;
     }
 
@@ -90,6 +132,8 @@ export default function SignUp() {
     } catch (error) {
       console.error('Error creating account:', error);
       Swal.fire('Error', 'An error occurred while creating your account. Please try again.', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,51 +163,57 @@ export default function SignUp() {
             </label>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full max-w-lg text-black">
-            <div className="flex gap-4 mb-1">
-              <div className="w-1/2">
-                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
-                <input type="text" id="first-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <ThreeDots color="#4FB8B3" height={80} width={80} />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="w-full max-w-lg text-black">
+              <div className="flex gap-4 mb-1">
+                <div className="w-1/2">
+                  <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
+                  <input type="text" id="first-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                </div>
+                <div className="w-1/2">
+                  <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last Name</label>
+                  <input type="text" id="last-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                </div>
               </div>
-              <div className="w-1/2">
-                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last Name</label>
-                <input type="text" id="last-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+
+              <div className="flex flex-col mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="email" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
               </div>
-            </div>
 
-            <div className="flex flex-col mb-1">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-              <input type="email" id="email" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-            </div>
+              <div className="flex flex-col mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password *</label>
+                <input type="password" id="password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+              </div>
 
-            <div className="flex flex-col mb-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password *</label>
-              <input type="password" id="password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-            </div>
+              <div className="flex flex-col mb-1">
+                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+              </div>
 
-            <div className="flex flex-col mb-1">
-              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-              <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-            </div>
+              <LocationPicker onLocationSelect={handleLocationSelect} />
 
-            <LocationPicker onLocationSelect={handleLocationSelect} />
+              <hr className="border-gray-300 my-4" />
 
-            <hr className="border-gray-300 my-4" />
+              <p className="text-center text-sm text-gray-600 mb-4">
+                By clicking Create Account, you agree to the Terms of Use and Privacy Policy.
+              </p>
+              <button type="submit" className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
+                Create Account
+              </button>
 
-            <p className="text-center text-sm text-gray-600 mb-4">
-              By clicking Create Account, you agree to the Terms of Use and Privacy Policy.
-            </p>
-            <button type="submit" className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
-              Create Account
-            </button>
-
-            <p className="text-center text-sm text-black">
-              Already have an account?{' '}
-              <Link href="/login">
-                <span className="text-teal-600 hover:text-teal-500 mb-4">Log in.</span>
-              </Link>
-            </p>
-          </form>
+              <p className="text-center text-sm text-black">
+                Already have an account?{' '}
+                <Link href="/login">
+                  <span className="text-teal-600 hover:text-teal-500 mb-4">Log in.</span>
+                </Link>
+              </p>
+            </form>
+          )}
         </div>
 
         <div className='mt-6'></div>
