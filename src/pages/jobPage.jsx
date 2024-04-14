@@ -3,7 +3,7 @@ import '../styles/globals.css';
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import BidsList from "../components/bidsCard";
-import BidForm from "../components/bidForm"; // Make sure to create this new component
+import BidForm from "../components/bidForm"; 
 
 const services = [
     { name: 'Cleaning', iconSrc: '/images/cleaning-icon.png' },

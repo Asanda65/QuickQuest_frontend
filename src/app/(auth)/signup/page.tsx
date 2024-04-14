@@ -1,108 +1,174 @@
+"use client";
+import { useState } from 'react';
 import Link from 'next/link';
-import Navbar from "../../../components/Navbar";
-import Footer from "../../../components/Footer";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
-import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
-import '../../globals.css';
-import LocationPicker from "../../../components/signupLocationInput";
+import LocationPicker from '../../../components/signupLocationInput';
+import uploadImage from '@/app/lib/api/uploadImage';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
-
+interface UserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  type: string;
+  status: string;
+  location: {
+    type: string;
+    coordinates: number[];
+  };
+  profileImage: string;
+}
 
 export default function SignUp() {
-    return (
-        <>
-            <div className='flex flex-col'>
-                <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6">
-                    <div className='mt-6'></div>
-                    <h1 className="text-lg font-meduim text-black">Get Started</h1>
-                    <p className="text-center text-base my-2 mb-4" style={{ color: "#02615D" }}>Welcome to QuickQuest - let’s create your account</p>
-                    <div className="relative flex flex-col items-center justify-center w-24 h-24 rounded-full overflow-hidden">
-                        {/* Hidden file input */}
-                        <input type="file" id="imageUpload" className="hidden" />
-                        {/* Label wraps the profile picture and the overlay */}
-                        <label htmlFor="imageUpload" className="cursor-pointer w-full h-full rounded-full">
-                            {/* Profile picture */}
-                            <img src="/images/profile-icon.png" alt="Profile" className="w-full h-full rounded-full" />
-                            {/* Overlay */}
-                            <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                <FontAwesomeIcon icon={faCamera} className="text-white w-6 h-6" />
-                                <span className="text-white text-xs">Add image</span>
-                            </div>
-                        </label>
-                    </div>
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
-                    <div className="w-full max-w-lg text-black">
-                        <div className="flex gap-4 mb-1">
-                            <div className="w-1/2">
-                                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
-                                <input type="text" id="first-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-                            </div>
-                            <div className="w-1/2">
-                                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last Name</label>
-                                <input type="text" id="last-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-                            </div>
-                        </div>
+  const handleLocationSelect = (selectedLocation: { lat: number; lng: number }) => {
+    setLocation(selectedLocation);
+  };
 
-                        <div className="flex flex-col mb-1">
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" id="email" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-                        </div>
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-                        <div className="flex flex-col mb-1">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password *</label>
-                            <input type="password" id="password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-                        </div>
+    const form = event.target as HTMLFormElement;
+    const firstName = (form.elements.namedItem('first-name') as HTMLInputElement).value;
+    const lastName = (form.elements.namedItem('last-name') as HTMLInputElement).value;
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+    const password = (form.elements.namedItem('password') as HTMLInputElement).value;
+    const confirmPassword = (form.elements.namedItem('confirm-password') as HTMLInputElement).value;
 
-                        <div className="flex flex-col mb-1">
-                            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                            <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
-                        </div>
+    // Input validations
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      Swal.fire('Error', 'Please fill in all the required fields.', 'error');
+      return;
+    }
 
+    if (password !== confirmPassword) {
+      Swal.fire('Error', 'Passwords do not match.', 'error');
+      return;
+    }
 
+    try {
+      let profileImage = '';
 
-                        {/* <div className="flex flex-col mb-4">
-                            <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
-                            <div className="relative mt-1">
-                                <input
-                                    type="text"
-                                    id="location"
-                                    placeholder="Enter Location or Locate me"
-                                    className="block w-full border border-green-800 pl-3 pr-12 py-1 rounded-md shadow-sm"
-                                />
-                                <div className="absolute inset-y-0 right-0 flex items-center bg-teal-500 rounded-r-md">
-                                    <FontAwesomeIcon icon={faCrosshairs} className="w-5 h-5 text-white mx-3" />
-                                </div>
-                            </div>
-                        </div> */}
+      if (selectedImage) {
+        profileImage = await uploadImage(selectedImage);
+      }
 
+      const userData: UserData = {
+        firstName,
+        lastName,
+        email,
+        password,
+        type: 'CUSTOMER',
+        status: 'UNVERIFIED',
+        location: {
+          type: 'Point',
+          coordinates: location ? [location.lng, location.lat] : [0, 0],
+        },
+        profileImage,
+      };
 
-                        <LocationPicker />
+      await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/register`, userData);
 
-                        <hr className="border-gray-300 my-4" />
+      Swal.fire('Success', 'Your account has been created successfully!', 'success').then(() => {
+        // Redirect to verification page
+        window.location.href = '/verifyEmail';
+      });
+    } catch (error) {
+      console.error('Error creating account:', error);
+      Swal.fire('Error', 'An error occurred while creating your account. Please try again.', 'error');
+    }
+  };
 
-                        <p className="text-center text-sm text-gray-600 mb-4">
-                            By clicking Create Account, you agree to the Terms of Use and Privacy Policy.
-                        </p>
-                        <Link href="/verifyEmail">
-                            <button className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
-                                Create Account
-                            </button>
-                        </Link>
+  return (
+    <>
+      <div className='flex flex-col'>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6">
+          <div className='mt-6'></div>
+          <h1 className="text-lg font-medium text-black">Get Started</h1>
+          <p className="text-center text-base my-2 mb-4" style={{ color: "#02615D" }}>Welcome to QuickQuest - lets create your account</p>
+          <div className="relative flex flex-col items-center justify-center w-24 h-24 rounded-full overflow-hidden">
+            {/* Hidden file input */}
+            <input type="file" id="imageUpload" className="hidden" onChange={handleImageUpload} />
+            {/* Label wraps the profile picture and the overlay */}
+            <label htmlFor="imageUpload" className="cursor-pointer w-full h-full rounded-full">
+              {/* Profile picture */}
+              {imagePreview ? (
+                <img src={imagePreview} alt="Profile" className="w-full h-full rounded-full" />
+              ) : (
+                <img src="/images/profile-icon.png" alt="Profile" className="w-full h-full rounded-full" />
+              )}
+              {/* Overlay */}
+              <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <FontAwesomeIcon icon={faCamera} className="text-white w-6 h-6" />
+                <span className="text-white text-xs">Add image</span>
+              </div>
+            </label>
+          </div>
 
-                        <p className="text-center text-sm text-black">
-                            Already have an account?{' '}
-                            <Link href="/login">
-                                <span className="text-teal-600 hover:text-teal-500 mb-4">Log in.</span>
-                            </Link>
-                        </p>
-                    </div>
-                </div>
-
-                <div className='mt-6'></div>
-
+          <form onSubmit={handleSubmit} className="w-full max-w-lg text-black">
+            <div className="flex gap-4 mb-1">
+              <div className="w-1/2">
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
+                <input type="text" id="first-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+              </div>
+              <div className="w-1/2">
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last Name</label>
+                <input type="text" id="last-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+              </div>
             </div>
-        </>
-    );
+
+            <div className="flex flex-col mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="email" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+            </div>
+
+            <div className="flex flex-col mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password *</label>
+              <input type="password" id="password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+            </div>
+
+            <div className="flex flex-col mb-1">
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+            </div>
+
+            <LocationPicker onLocationSelect={handleLocationSelect} />
+
+            <hr className="border-gray-300 my-4" />
+
+            <p className="text-center text-sm text-gray-600 mb-4">
+              By clicking Create Account, you agree to the Terms of Use and Privacy Policy.
+            </p>
+            <button type="submit" className="w-full bg-teal-500 text-sm text-white rounded-md py-2 mb-2 hover:bg-teal-600">
+              Create Account
+            </button>
+
+            <p className="text-center text-sm text-black">
+              Already have an account?{' '}
+              <Link href="/login">
+                <span className="text-teal-600 hover:text-teal-500 mb-4">Log in.</span>
+              </Link>
+            </p>
+          </form>
+        </div>
+
+        <div className='mt-6'></div>
+
+      </div>
+    </>
+  );
 }
