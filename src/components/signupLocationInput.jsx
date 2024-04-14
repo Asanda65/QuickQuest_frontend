@@ -3,13 +3,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
-
-
-const LocationPicker = () => {
+const LocationPicker = ({ onLocationSelect }) => {
     const [showMap, setShowMap] = useState(false);
     const mapRef = useRef(null);
-    const mapInstanceRef = useRef(null); // Ref for the map instance
-    const markerRef = useRef(null); // Ref for the marker
+    const mapInstanceRef = useRef(null);
+    const markerRef = useRef(null);
 
     useEffect(() => {
         if (window.google && window.google.maps && window.google.maps.places) {
@@ -40,38 +38,52 @@ const LocationPicker = () => {
                 map: mapInstanceRef.current,
                 draggable: true,
             });
+
+            markerRef.current.addListener('dragend', handleMarkerDrag);
         }
     };
 
     const initializeAutocomplete = () => {
         const input = document.getElementById('location');
         const autocomplete = new window.google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', mapInstanceRef.current);
-
+      
+        if (mapInstanceRef.current) {
+          autocomplete.bindTo('bounds', mapInstanceRef.current);
+        }
+      
         autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-            if (!place.geometry || !place.geometry.location) {
-                console.log("Returned place contains no geometry");
-                return;
-            }
-            const location = place.geometry.location;
-
-            if (mapInstanceRef.current) {
-                mapInstanceRef.current.setCenter(location);
-                mapInstanceRef.current.setZoom(15);
-            }
-
-            if (markerRef.current) {
-                markerRef.current.setPosition(location);
-            }
+          const place = autocomplete.getPlace();
+          if (!place.geometry || !place.geometry.location) {
+            console.log("Returned place contains no geometry");
+            return;
+          }
+          const location = place.geometry.location;
+      
+          if (mapInstanceRef.current) {
+            mapInstanceRef.current.setCenter(location);
+            mapInstanceRef.current.setZoom(15);
+          }
+      
+          if (markerRef.current) {
+            markerRef.current.setPosition(location);
+          }
         });
-    };
+      };
 
     const handleIconClick = () => {
         setShowMap(!showMap);
     };
 
-    const closeMap = () => {
+    const handleMarkerDrag = () => {
+        const latLng = markerRef.current.getPosition();
+        if (mapInstanceRef.current) {
+            mapInstanceRef.current.setCenter(latLng);
+        }
+    };
+
+    const confirmLocation = () => {
+        const latLng = markerRef.current.getPosition();
+        onLocationSelect({ lat: latLng.lat(), lng: latLng.lng() });
         setShowMap(false);
     };
 
@@ -94,7 +106,7 @@ const LocationPicker = () => {
             )}
             {showMap && (
                 <button
-                    onClick={closeMap}
+                    onClick={confirmLocation}
                     className="mt-0 bg-teal-500 text-white py-1 border border-green-800 w-full"
                 >
                     Confirm & Continue
