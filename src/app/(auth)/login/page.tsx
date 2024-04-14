@@ -49,8 +49,6 @@ export default function Login() {
         event.currentTarget.password.value
       );
       localStorage.setItem('token', token);
-
-      console.log(token);
       const fetchedUser = await fetchUserProfile(token);
       setUser(fetchedUser);
 

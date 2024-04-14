@@ -5,6 +5,7 @@ import Footer from "../../../components/Footer";
 import Navbar from "../../../components/Navbar";
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import '../../globals.css';
+import AuthRoute from '../AuthRoute';
 
 const OrderCard = ({ profilePic, name, task, dueDate, price }) => {
   return (
@@ -97,6 +98,7 @@ const UserProfilePage = () => {
 
   return (
     <>
+    <AuthRoute>
       <div className="text-black mt-6">
         <img src="/images/test-prof-1.png" alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center" />
         <h1 className="text-xl font-medium mt-4 text-center">Ambala Anuhas</h1>
@@ -130,8 +132,10 @@ const UserProfilePage = () => {
           <div className='mb-12'></div>
         </div>
       </div>
+      </AuthRoute>
     </>
   );
+  
 };
 
 export default UserProfilePage;
