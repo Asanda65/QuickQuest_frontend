@@ -17,7 +17,7 @@ export default function ServicePopularWorkers({ serviceId }) {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`https://api.quick-quest.dfanso.dev/v1/workers/nearby?serviceId=${serviceId}`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/workers/nearby?serviceId=${serviceId}`, {
                 headers: {
                     'accept': '*/*',
                     'Authorization': `Bearer ${token}`

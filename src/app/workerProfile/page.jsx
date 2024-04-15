@@ -10,17 +10,29 @@ import CustomerFeedback from "../../components/customerFeedback";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
+import { useSearchParams } from 'next/navigation';
 
 const LabourPublicPage = () => {
   const [worker, setWorker] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [workerLocation, setWorkerLocation] = useState('');
+  const [workerId, setWorkerId] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const fetchWorkerProfile = async () => {
+
+  useEffect(() => {
+    const workerId = searchParams.get('workerId');
+    if (workerId) {
+      setWorkerId(workerId);
+      fetchWorkerProfile(workerId);
+    }
+  }, [searchParams]);
+
+  const fetchWorkerProfile = async (workerId) => {
     setIsLoading(true);
     try {
-      const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/workers/65e6dd46dc5b9dffcf5b7b17/profile');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/workers/${workerId}/profile`);
       setWorker(response.data);
       const [longitude, latitude] = response.data.location.coordinates;
       const locationName = await getLocationName(latitude, longitude);
