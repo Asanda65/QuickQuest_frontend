@@ -6,27 +6,12 @@ import PopularServices from "../components/poplarServices";
 import Testimonials from "../components/Testimonial";
 import Footer from "../components/Footer";
 import '../styles/globals.css';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { useRouter } from 'next/router'
 
 
 
 export default function Home() {
-
-
-  const router = useRouter();
-
-  useEffect(() => {
-    const handlePopState = () => {
-      router.reload(); // Reload the page
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [router]);
 
 
   return (
