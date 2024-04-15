@@ -1,11 +1,11 @@
 "use client"
 "use client"
 import React, { useState, useEffect } from 'react';
-import Footer from "../../../components/Footer";
-import Navbar from "../../../components/Navbar";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import '../../globals.css';
-import AuthRoute from '../AuthRoute';
+import '../globals.css';
+import AuthRoute from '../(auth)/AuthRoute';
 import axios from 'axios';
 
 const OrderCard = ({ profilePic, name, task, dueDate, price }) => {

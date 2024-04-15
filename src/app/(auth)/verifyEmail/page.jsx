@@ -33,6 +33,12 @@ export default function VerifyEmail() {
     }
   };
 
+  const handleOtpPaste = (e) => {
+    const pastedValue = e.clipboardData.getData('text/plain');
+    const newOtp = pastedValue.split('').slice(0, 6).map((char) => char || '');
+    setOtp(newOtp);
+  };
+
   const handleResendOtp = async () => {
     setIsLoading(true);
     try {
@@ -108,6 +114,7 @@ export default function VerifyEmail() {
                   maxLength={1}
                   value={otp[index]}
                   onChange={(e) => handleOtpChange(e, index)}
+                  onPaste={handleOtpPaste}
                   ref={(el) => (inputRefs.current[index] = el)}
                   style={{ width: "40px", height: "40px", border: "1px solid #173735", borderRadius: "5px", margin: "0 4px" }}
                   className="text-center text-black focus:ring-teal-500 focus:border-teal-500"
