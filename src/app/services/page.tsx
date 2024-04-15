@@ -1,30 +1,12 @@
+"use client";
 import React from 'react';
-import Navbar from "./../components/Navbar";
-import Footer from "./../components/Footer";
-import Link from 'next/link';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import '../styles/globals.css';
+import '../globals.css';
 
 export default function LabourPageServices() {
-    const services = [
-        {
-            name: "Lawn mowing",
-            price: "Starting at Rs.5000",
-            imageUrl: "/images/lawn-mowing.png"
-        },
-        {
-            name: "Hedge trimming",
-            price: "Starting at Rs.5000",
-            imageUrl: "/images/hedge-trimming.png"
-        },
-        {
-            name: "Garden maintenance",
-            price: "Starting at Rs.5000",
-            imageUrl: "/images/garden-maintenance.png"
-        },
-    ];
+
 
     const categories = [
         {
@@ -81,23 +63,8 @@ export default function LabourPageServices() {
 
     return (
         <>
-            <Navbar />
             <div className="mx-auto mt-4 py-4 max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-                <h2 className="text-lg pl-4 font-medium text-left text-black">Popular Services</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {services.map((service, index) => (
-                        <Link key={index} href="/oneServicePage" passHref>
-                            <span className="block p-4">
-                                <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                                    <img src={service.imageUrl} alt={service.name} className="w-full h-60 object-cover" />
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-medium text-black">{service.name}</h3>
-                                        <p className="text-gray-500">{service.price}</p>
-                                    </div>
-                                </div>
-                            </span>
-                        </Link>
-                    ))}
                 </div>
 
                 <h2 className="text-lg pl-4 font-medium text-left text-black mt-8">Categories</h2>
@@ -130,7 +97,6 @@ export default function LabourPageServices() {
                     ))}
                 </div>
             </div>
-            <Footer />
         </>
     );
 }

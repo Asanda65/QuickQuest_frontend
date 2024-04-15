@@ -29,7 +29,7 @@ const OrderCard = ({ order }) => {
 
     if (confirmCancel.isConfirmed) {
       try {
-        const response = await axios.post(`https://api.quick-quest.dfanso.dev/v1/jobs/cancel/${_id}`, null, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs/cancel/${_id}`, null, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -50,12 +50,12 @@ const OrderCard = ({ order }) => {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await axios.post(`https://api.quick-quest.dfanso.dev/v1/jobs/complete/${_id}`, null, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs/complete/${_id}`, null, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-
+      
       Swal.fire('Order Completed', response.data.message, 'success');
       window.location.href = '/profile';
     } catch (error) {
@@ -130,7 +130,7 @@ const UserProfilePage = () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Fetch user profile
-        const profileResponse = await axios.get('https://api.quick-quest.dfanso.dev/v1/auth/profile', {
+        const profileResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -153,7 +153,7 @@ const UserProfilePage = () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Fetch ongoing orders
-        const ongoingOrdersResponse = await axios.get('https://api.quick-quest.dfanso.dev/v1/jobs?status=PENDING', {
+        const ongoingOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=PENDING`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -164,14 +164,14 @@ const UserProfilePage = () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Fetch past orders (canceled and delivered)
-        const pastOrdersResponse = await axios.get('https://api.quick-quest.dfanso.dev/v1/jobs?status=CANCELLED', {
+        const pastOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=CANCELLED`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         const canceledOrders = pastOrdersResponse.data;
 
-        const deliveredOrdersResponse = await axios.get('https://api.quick-quest.dfanso.dev/v1/jobs?status=COMPLETED', {
+        const deliveredOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=COMPLETED`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
