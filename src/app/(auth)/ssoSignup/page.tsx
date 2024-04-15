@@ -99,7 +99,8 @@ export default function SSOSignup() {
       );
 
       Swal.fire('Success', 'Your profile has been updated successfully!', 'success').then(() => {
-        router.push('/');
+
+        router.push('https://quick-quest.vercel.app');
       });
     } catch (error) {
       console.error('Error updating profile:', error);
