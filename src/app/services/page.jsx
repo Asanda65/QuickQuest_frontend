@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../globals.css';
 import axios from 'axios';
-import { useSearchParams  } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
 
 export default function LabourPageServices() {
@@ -14,25 +14,29 @@ export default function LabourPageServices() {
     const [categoryId, setCategoryId] = useState('');
 
     const searchParams = useSearchParams();
+    const router = useRouter();
+
     useEffect(() => {
         if (searchParams) {
-        setCategoryId(searchParams.get('categoryId') || '');
+            setCategoryId(searchParams.get('categoryId') || '');
         }
-      }, [searchParams]);
+    }, [searchParams]);
 
     const fetchServices = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/services?category=${categoryId}`, {
-                headers: {
-                    'accept': '*/*'
-                }
-            });
-            setServices(response.data);
-        } catch (error) {
-            console.error('Error fetching services:', error);
-        } finally {
-            setIsLoading(false);
+        if (categoryId) {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/services?category=${categoryId}`, {
+                    headers: {
+                        'accept': '*/*'
+                    }
+                });
+                setServices(response.data);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            } finally {
+                setIsLoading(false);
+            }
         }
     }
 
@@ -68,7 +72,11 @@ export default function LabourPageServices() {
                         <div className="block md:hidden md:mb-0 mb-6">
                             <Slider {...sliderSettings}>
                                 {services.map((service, index) => (
-                                    <div key={index} className="p-4">
+                                    <div
+                                        key={index}
+                                        className="p-4 cursor-pointer"
+                                        onClick={() => router.push(`/workers?serviceId=${service._id}`)}
+                                    >
                                         <div className="bg-white rounded-lg overflow-hidden shadow-md">
                                             <img src={service.imageUrl} alt={service.name} className="w-full h-60 object-cover" />
                                             <div className="p-4">
@@ -82,7 +90,11 @@ export default function LabourPageServices() {
                         </div>
                         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
                             {services.map((service, index) => (
-                                <div key={index} className="p-4">
+                                <div
+                                    key={index}
+                                    className="p-4 cursor-pointer"
+                                    onClick={() => router.push(`/workers?serviceId=${service._id}`)}
+                                >
                                     <div className="bg-white rounded-lg overflow-hidden shadow-md">
                                         <img src={service.imageUrl} alt={service.name} className="w-full h-60 object-cover" />
                                         <div className="p-4">
