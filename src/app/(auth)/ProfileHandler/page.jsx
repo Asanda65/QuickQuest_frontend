@@ -45,7 +45,7 @@ export default function ProfileHandler() {
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
-            router.push('/login'); // Redirect to an error page if needed
+            router.push('/error'); // Redirect to an error page if needed
           }
         }
       };
