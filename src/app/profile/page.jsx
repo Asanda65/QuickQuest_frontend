@@ -7,9 +7,64 @@ import '../globals.css';
 import AuthRoute from '../(auth)/AuthRoute';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
+import Swal from 'sweetalert2';
 
 const OrderCard = ({ order }) => {
-  const { service, worker, orderedDate, deliveryDate, price } = order;
+  const { _id, service, worker, orderedDate, deliveryDate, price } = order;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleCancelOrder = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem('token');
+
+    const confirmCancel = await Swal.fire({
+      title: 'Cancel Order',
+      text: 'Are you sure you want to cancel this order?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, cancel it!'
+    });
+
+    if (confirmCancel.isConfirmed) {
+      try {
+        const response = await axios.post(`https://api.quick-quest.dfanso.dev/v1/jobs/cancel/${_id}`, null, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        Swal.fire('Order Canceled', response.data.message, 'success');
+        window.location.href = '/profile';
+      } catch (error) {
+        Swal.fire('Error', error.response.data.message, 'error');
+      }
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleCompleteOrder = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios.post(`https://api.quick-quest.dfanso.dev/v1/jobs/complete/${_id}`, null, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      Swal.fire('Order Completed', response.data.message, 'success');
+      window.location.href = '/profile';
+    } catch (error) {
+      Swal.fire('Error', error.response.data.message, 'error');
+    }
+
+    setIsLoading(false);
+  };
+
   return (
     <div className="flex flex-col sm:flex-row mt-4 mx-4 mx-20 items-center justify-between p-4 bg-white rounded text-black shadow" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
       <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0" />
@@ -21,8 +76,18 @@ const OrderCard = ({ order }) => {
       <span>Due on {new Date(deliveryDate).toLocaleDateString()}</span>
       <span>${price}</span>
       <div className='flex md:mt-0 mt-2'>
-        <button className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded">Mark as Complete</button>
-        <button className="ml-2 bg-transparent hover:bg-red-500 text-red-500 duration-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded">
+        <button
+          className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded"
+          onClick={handleCompleteOrder}
+          disabled={isLoading}
+        >
+          Mark as Complete
+        </button>
+        <button
+          className="ml-2 bg-transparent hover:bg-red-500 text-red-500 duration-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded"
+          onClick={handleCancelOrder}
+          disabled={isLoading}
+        >
           Cancel
         </button>
       </div>
