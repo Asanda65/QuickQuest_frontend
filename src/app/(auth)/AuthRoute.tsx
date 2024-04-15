@@ -25,6 +25,10 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
     router.push('/verifyEmail');
     return null;
   }
+  if (user.status === 'GOOGLEAUTH') {
+    router.push('/verifyEmail');
+    return null;
+  }
 
   return <>{children}</>;
 };

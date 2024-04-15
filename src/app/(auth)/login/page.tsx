@@ -10,6 +10,7 @@ import { useAuth } from '@/app/contexts/AuthContext';
 import { loginUser, fetchUserProfile } from '@/app/lib/api/auth';
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
+import axios from 'axios';
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,12 @@ export default function Login() {
     email: '',
     password: '',
   });
+
+  const handleGoogleSignIn = () => {
+    const googleSSOUrl = 'http://localhost:9000/v1/auth/google-signin';
+    window.location.href = googleSSOUrl;
+  };
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -155,7 +162,10 @@ export default function Login() {
             )}
             <div className="text-sm text-center mt-2 mb-2 text-gray-600">OR</div>
             <div className="flex flex-col space-y-3">
-              <button className="group relative w-full flex justify-center items-center py-2 px-4 border border-black text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-md">
+            <button
+                className="group relative w-full flex justify-center items-center py-2 px-4 border border-black text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 shadow-md"
+                onClick={handleGoogleSignIn}
+              >
                 <FaGoogle className="text-red-500 mr-2" />
                 Continue with Google
               </button>
