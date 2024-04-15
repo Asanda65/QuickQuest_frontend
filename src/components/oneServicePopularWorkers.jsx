@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from 'axios';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
 
 export default function OneServicePopularWorkers() {
@@ -13,6 +13,7 @@ export default function OneServicePopularWorkers() {
     const [isLoading, setIsLoading] = useState(false);
     const searchParams = useSearchParams();
     const serviceId = searchParams.get('serviceId');
+    const router = useRouter();
 
     const fetchWorkers = async () => {
         setIsLoading(true);
@@ -92,7 +93,12 @@ export default function OneServicePopularWorkers() {
                             </div>
                             <p className="font-semibold text-base text-black mb-2">About Me:</p>
                             <p className="text-gray-600 mb-4">{workers[0].aboutMe}</p>
-                            <button className="bg-teal-500 text-white px-8 py-2 rounded-md">Hire</button>
+                            <button
+                                className="bg-teal-500 text-white px-8 py-2 rounded-md"
+                                onClick={() => router.push(`/workerProfile?workerId=${workers[0]._id}`)}
+                            >
+                                Hire
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -115,7 +121,12 @@ export default function OneServicePopularWorkers() {
                                 </div>
                                 <p className="font-semibold text-base text-black mb-2">About Me:</p>
                                 <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
-                                <button className="bg-teal-500 text-white px-8 py-2 rounded-md">Hire</button>
+                                <button
+                                    className="bg-teal-500 text-white px-8 py-2 rounded-md"
+                                    onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}
+                                >
+                                    Hire
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -140,7 +151,12 @@ export default function OneServicePopularWorkers() {
                                     </div>
                                     <p className="font-semibold text-base text-black mb-2">About Me:</p>
                                     <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
-                                    <button className="bg-teal-500 text-white px-8 py-2 rounded-md">Hire</button>
+                                    <button
+                                        className="bg-teal-500 text-white px-8 py-2 rounded-md"
+                                        onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}
+                                    >
+                                        Hire
+                                    </button>
                                 </div>
                             </div>
                         </div>
