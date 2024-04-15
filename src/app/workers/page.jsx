@@ -77,19 +77,13 @@ const OneServicePage = () => {
         </div>
       )}
 
-      {isUserLoggedIn && <ServicePopularWorkers />}
+      {isUserLoggedIn && <ServicePopularWorkers serviceId={sId} />}
 
       <div className="flex justify-between items-center mb-6 mt-6 lg:px-16">
-        <h1 className="text-xl font-semibold text-gray-800 mb-6 pl-8 md:pl-0">Popular Workers</h1>
+        
         <div>
           <div className="relative">
-            <div
-              onClick={toggleDropdown}
-              className="inline-flex items-center border border-teal-500 bg-white px-2 py-1 rounded-md cursor-pointer"
-            >
-              <span className="text-teal-500 mr-1 text-xs md:text-base">Highest Rating</span>
-              <FaCaretDown className='text-teal-500' />
-            </div>
+            
 
             {dropdownOpen && (
               <ul className="absolute z-10 mt-1 w-32 border border-gray-200 bg-white shadow-md rounded-md py-1">

@@ -1,26 +1,26 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa';
 import Slider from 'react-slick';
+import { FaStar } from 'react-icons/fa';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from 'axios';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
 
-export default function OneServicePopularWorkers() {
+export default function ServicePopularWorkers({ serviceId }) {
     const [workers, setWorkers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const searchParams = useSearchParams();
-    const serviceId = searchParams.get('serviceId');
     const router = useRouter();
 
     const fetchWorkers = async () => {
         setIsLoading(true);
         try {
-            const response = await axios.get(`https://api.quick-quest.dfanso.dev/v1/services/${serviceId}/workers`, {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`https://api.quick-quest.dfanso.dev/v1/workers/nearby?serviceId=${serviceId}`, {
                 headers: {
-                    'accept': '*/*'
+                    'accept': '*/*',
+                    'Authorization': `Bearer ${token}`
                 }
             });
             setWorkers(response.data);
@@ -68,14 +68,17 @@ export default function OneServicePopularWorkers() {
         ]
     };
 
+    const handleHireClick = (workerId) => {
+        router.push(`/workerProfile?workerId=${workerId}`);
+    };
+
     return (
         <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-6">
-            <h1 className="text-xl font-semibold text-gray-800 mb-6 pl-8 md:pl-0">Popular Workers</h1>
-            <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black"></h2>
+            <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
             {isLoading ? (
                 <div className="flex items-center justify-center">
-                    <ThreeDots color="#4FB8B3" height={80} width={80} />
-                </div>
+                <ThreeDots color="#4FB8B3" height={80} width={80} />
+            </div>
             ) : workers.length === 1 ? (
                 <div className="px-4">
                     <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
@@ -96,7 +99,7 @@ export default function OneServicePopularWorkers() {
                             <p className="text-gray-600 mb-4">{workers[0].aboutMe}</p>
                             <button
                                 className="bg-teal-500 text-white px-8 py-2 rounded-md"
-                                onClick={() => router.push(`/workerProfile?workerId=${workers[0]._id}`)}
+                                onClick={() => handleHireClick(workers[0]._id)}
                             >
                                 Hire
                             </button>
@@ -124,7 +127,7 @@ export default function OneServicePopularWorkers() {
                                 <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
                                 <button
                                     className="bg-teal-500 text-white px-8 py-2 rounded-md"
-                                    onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}
+                                    onClick={() => handleHireClick(worker._id)}
                                 >
                                     Hire
                                 </button>
@@ -154,7 +157,7 @@ export default function OneServicePopularWorkers() {
                                     <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
                                     <button
                                         className="bg-teal-500 text-white px-8 py-2 rounded-md"
-                                        onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}
+                                        onClick={() => handleHireClick(worker._id)}
                                     >
                                         Hire
                                     </button>
