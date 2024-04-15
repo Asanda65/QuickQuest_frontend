@@ -22,7 +22,7 @@ export default function Login() {
   });
 
   const handleGoogleSignIn = () => {
-    const googleSSOUrl = 'http://localhost:9000/v1/auth/google-signin';
+    const googleSSOUrl = `${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/google-signin`;
     window.location.href = googleSSOUrl;
   };
 
