@@ -5,20 +5,21 @@ import PopularWorkers from "../components/popularWorkers";
 import PopularServices from "../components/poplarServices";
 import Testimonials from "../components/Testimonial";
 import Footer from "../components/Footer";
-import '../styles/globals.css';
+import './globals.css';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const fetchCategories = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/categories', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/categories`, {
         headers: {
           'accept': '*/*'
         }
@@ -57,36 +58,42 @@ export default function Home() {
           <>
             {/* Services Section for Desktop Views */}
             <div className="hidden sm:hidden md:grid md:grid-cols-5 gap-4 justify-items-center mt-1 md:mt-12 mb-12">
-              {categories
-                .map((category) => (
-                  <div key={category._id} className="text-center space-y-2">
-                    <div className="p-4 rounded-full">
-                      <img
-                        src={category.iconUrl}
-                        alt={category.name}
-                        className="h-14 w-14 mx-auto"
-                      />
-                    </div>
-                    <div className="text-gray-700">{category.name}</div>
+              {categories.map((category) => (
+                <div
+                  key={category._id}
+                  className="text-center space-y-2 cursor-pointer"
+                  onClick={() => router.push(`/services?categoryId=${category._id}`)}
+                >
+                  <div className="p-4 rounded-full">
+                    <img
+                      src={category.iconUrl}
+                      alt={category.name}
+                      className="h-14 w-14 mx-auto"
+                    />
                   </div>
-                ))}
+                  <div className="text-gray-700">{category.name}</div>
+                </div>
+              ))}
             </div>
 
             {/* Services Section for Mobile Views */}
             <div className="grid grid-cols-3 md:hidden gap-4 justify-items-center mt-1 mb-12">
-              {categories
-                .map((category) => (
-                  <div key={category.id} className="text-center space-y-2">
-                    <div className="p-4 rounded-full">
-                      <img
-                        src={category.iconUrl}
-                        alt={category.name}
-                        className="h-10 w-10 mx-auto"
-                      />
-                    </div>
-                    <div className="text-gray-700 text-sm">{category.name}</div>
+              {categories.map((category) => (
+                <div
+                  key={category._id}
+                  className="text-center space-y-2 cursor-pointer"
+                  onClick={() => router.push(`/services?categoryId=${category._id}`)}
+                >
+                  <div className="p-4 rounded-full">
+                    <img
+                      src={category.iconUrl}
+                      alt={category.name}
+                      className="h-10 w-10 mx-auto"
+                    />
                   </div>
-                ))}
+                  <div className="text-gray-700 text-sm">{category.name}</div>
+                </div>
+              ))}
             </div>
           </>
         )}
