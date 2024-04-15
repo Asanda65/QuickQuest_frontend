@@ -5,40 +5,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../styles/globals.css';
 
-const CustomerFeedback = () => {
+const CustomerFeedback = ({ feedbacks }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
-    const reviews = [
-        {
-            userName: "Ambala Anuhas",
-            rating: 4,
-            text: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.",
-            imageUrl: "/images/construction.png",
-            userProfilePic: "/images/worker1-img.jpg",
-        },
-        {
-            userName: "Ambala Anuhas",
-            rating: 4,
-            text: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.",
-            imageUrl: "/images/commercial-construction.png",
-            userProfilePic: "/images/worker1-img.jpg",
-        },
-        {
-            userName: "Ambala Anuhas",
-            rating: 4,
-            text: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.",
-            imageUrl: "/images/bridal-makeup.png",
-            userProfilePic: "/images/worker1-img.jpg",
-        },
-        {
-            userName: "Ambala Anuhas",
-            rating: 4,
-            text: "Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.",
-            imageUrl: "/images/commercial-construction.png",
-            userProfilePic: "/images/worker1-img.jpg",
-        },
-
-    ];
 
     const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -71,37 +39,37 @@ const CustomerFeedback = () => {
             {/* Slider for mobile view */}
             <div className="md:hidden md:mb-0 mb-6">
                 <Slider {...settings}>
-                    {reviews.map((review, index) => (
+                    {feedbacks.map((feedback, index) => (
                         <div key={index} className="mb-8">
                             {/* Service image */}
                             <img
-                                src={review.imageUrl}
+                                src={feedback.service.imageUrl}
                                 alt="Service"
                                 className="w-full h-auto object-cover rounded-lg mb-2"
                             />
                             <div className="flex items-start">
                                 {/* Profile picture */}
                                 <img
-                                    src={review.userProfilePic}
-                                    alt={review.userName}
+                                    src={feedback.customer.profileImage}
+                                    alt={`${feedback.customer.firstName} ${feedback.customer.lastName}`}
                                     className="w-12 h-12 object-cover rounded-full  mr-4 mt-2 md:mt-0 md:mr-2"
                                 />
                                 <div className="flex flex-col flex-1">
                                     {/* Username */}
-                                    <span className="font-semibold text-gray-800">{review.userName}</span>
+                                    <span className="font-semibold text-gray-800">{feedback.customer.firstName} {feedback.customer.lastName}</span>
                                     {/* Star rating */}
                                     <div className="flex mt-1">
                                         {[...Array(5)].map((_, i) => (
                                             <FaStar
                                                 key={i}
-                                                className={i < review.rating ? "text-yellow-400" : "text-gray-300"}
+                                                className={i < feedback.stars ? "text-yellow-400" : "text-gray-300"}
                                             />
                                         ))}
                                     </div>
                                 </div>
                             </div>
                             {/* Review text */}
-                            <p className="text-gray-600 mt-2">{review.text}</p>
+                            <p className="text-gray-600 mt-2">{feedback.description}</p>
                         </div>
                     ))}
 
@@ -109,22 +77,22 @@ const CustomerFeedback = () => {
             </div>
             {/* Regular view for non-mobile screens */}
             <div className="hidden md:block">
-                {reviews.map((review, index) => (
+                {feedbacks.map((feedback, index) => (
                     <div key={index} className="flex flex-col md:flex-row items-center p-4 rounded-lg mb-8 bg-white shadow" style={{ borderRadius: '8px' }}>
-                        <img src={review.imageUrl} alt="Service" className="md:w-36 md:h-36 w-full h-full object-cover rounded-lg mr-4 md:mb-0 mb-4" />
+                        <img src={feedback.service.imageUrl} alt="Service" className="md:w-36 md:h-36 w-full h-full object-cover rounded-lg mr-4 md:mb-0 mb-4" />
                         <div className="flex-1">
                             <div className="flex justify-between items-start">
                                 <div className="flex items-center">
-                                    <img src={review.userProfilePic} alt={review.userName} className="w-9 h-9 object-cover rounded-full mr-4" />
-                                    <span className="font-semibold text-gray-800">{review.userName}</span>
+                                    <img src={feedback.customer.profileImage} alt={`${feedback.customer.firstName} ${feedback.customer.lastName}`} className="w-9 h-9 object-cover rounded-full mr-4" />
+                                    <span className="font-semibold text-gray-800">{feedback.customer.firstName} {feedback.customer.lastName}</span>
                                 </div>
                                 <div className="flex">
                                     {[...Array(5)].map((_, i) => (
-                                        <FaStar key={i} className={i < review.rating ? "text-yellow-400" : "text-gray-300"} />
+                                        <FaStar key={i} className={i < feedback.stars ? "text-yellow-400" : "text-gray-300"} />
                                     ))}
                                 </div>
                             </div>
-                            <p className="text-gray-600 mt-4">{review.text}</p>
+                            <p className="text-gray-600 mt-4">{feedback.description}</p>
                         </div>
                     </div>
                 ))}

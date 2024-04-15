@@ -9,6 +9,7 @@ import LabourPageServices from "../../components/servicesLabourPublic";
 import CustomerFeedback from "../../components/customerFeedback";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { ThreeDots } from 'react-loader-spinner';
 
 const LabourPublicPage = () => {
   const [worker, setWorker] = useState(null);
@@ -56,7 +57,9 @@ const LabourPublicPage = () => {
   return (
     <>
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="flex items-center justify-center h-screen">
+          <ThreeDots color="#4FB8B3" height={80} width={80} />
+        </div>
       ) : worker ? (
         <div className="container mx-auto p-4 flex flex-col md:flex-row gap-4 justify-center mt-4 items-center md:px-14">
           <div style={cardStyle} className="bg-white p-4 flex-1 pt-8 min-h-96">
@@ -131,7 +134,7 @@ const LabourPublicPage = () => {
           </button>
         </Link>
       </div>
-      <CustomerFeedback />
+      {worker && worker.feedbacks && <CustomerFeedback feedbacks={worker.feedbacks} />}
     </>
   );
 };
