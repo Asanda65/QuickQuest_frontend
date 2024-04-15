@@ -6,6 +6,7 @@ import Navbar from "../../../components/Navbar";
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import '../../globals.css';
 import AuthRoute from '../AuthRoute';
+import axios from 'axios';
 
 const OrderCard = ({ profilePic, name, task, dueDate, price }) => {
   return (
@@ -52,6 +53,7 @@ const PastOrderCard = ({ profilePic, name, task, dueDate, price }) => {
 const UserProfilePage = () => {
   const [orders, setOrders] = useState([]);
   const [pastOrders, setPastOrders] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     // Simulate fetching ongoing orders
@@ -96,15 +98,46 @@ const UserProfilePage = () => {
     setPastOrders(fetchedPastOrders);
   }, []);
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+  
+        const { location, firstName, lastName,profileImage} = response.data;
+        console.log(response.data)
+        const { coordinates } = location;
+        const [longitude, latitude] = coordinates;
+  
+        // Reverse geocode the coordinates to get the location name
+        const geocodingUrl = `https://us1.locationiq.com/v1/reverse?key=${process.env.NEXT_PUBLIC_LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
+        const geocodingResponse = await fetch(geocodingUrl);
+        const geocodingData = await geocodingResponse.json();
+  
+        const locationName = geocodingData.display_name || '';
+  
+        setUserProfile({ firstName,lastName,profileImage, longitude, latitude, locationName });
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+
   return (
     <>
     <AuthRoute>
       <div className="text-black mt-6">
-        <img src="/images/test-prof-1.png" alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center" />
-        <h1 className="text-xl font-medium mt-4 text-center">Ambala Anuhas</h1>
+        <img src={userProfile?.profileImage} alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center" />
+        <h1 className="text-xl font-medium mt-4 text-center">{userProfile?.firstName} {userProfile?.lastName}</h1>
         <div className="flex items-center justify-center mt-1">
           <FaMapMarkerAlt className='text-teal-500 mr-1' />
-          <span className='text-sm'>Nattandiya</span>
+          <span className='text-sm'>{userProfile?.locationName}</span>
         </div>
         <div className='mx-4 sm:mx-20'>
           <h2 className="text-lg font-medium mt-8 mb-6 " style={{ textAlign: 'left' }}>Ongoing Orders</h2>
