@@ -77,14 +77,16 @@ export default function ServicePopularWorkers({ serviceId }) {
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-6">
-      <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
+      
       {isLoading ? (
         <div className="flex items-center justify-center">
           <ThreeDots color="#4FB8B3" height={80} width={80} />
         </div>
       ) : workers.length === 1 ? (
         <div className="px-4">
+          <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
           <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
+            
             <img
               src={workers[0].profileImage}
               alt={`${workers[0].firstName} ${workers[0].lastName}`}
@@ -112,6 +114,7 @@ export default function ServicePopularWorkers({ serviceId }) {
       ) : workers.length < 5 ? (
         workers.map((worker, index) => (
           <div key={index} className="px-4">
+            <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
             <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
               <img
                 src={worker.profileImage}
@@ -142,6 +145,7 @@ export default function ServicePopularWorkers({ serviceId }) {
         <Slider {...settings}>
           {workers.map((worker, index) => (
             <div key={index} className="px-4">
+              <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
               <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
                 <img
                   src={worker.profileImage}

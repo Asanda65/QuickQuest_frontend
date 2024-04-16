@@ -43,7 +43,7 @@ export default function ProfileHandler() {
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
-          router.push('/error');
+          router.push('/');
         }
       }
     };
