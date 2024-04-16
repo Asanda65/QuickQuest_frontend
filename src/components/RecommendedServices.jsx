@@ -1,47 +1,57 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 import { useRouter } from 'next/navigation';
 
-export default function PopularServices() {
+export default function RecommendedServices() {
     const [services, setServices] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        const fetchServices = async () => {
+        const fetchRecommendedServices = async () => {
             try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/services`);
-                const allServices = response.data;
-                const randomServices = getRandomServices(allServices, 5);
-                setServices(randomServices);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found in localStorage');
+                    setIsLoading(false);
+                    return;
+                }
+
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/recommendations`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'accept': '*/*'
+                    }
+                });
+
+                setServices(response.data);
             } catch (error) {
-                console.error('Error fetching services:', error);
+                console.error('Error fetching recommended services:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        fetchServices();
+        fetchRecommendedServices();
     }, []);
-
-    const getRandomServices = (services, count) => {
-        const shuffled = services.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
-    };
 
     const settings = {
         dots: true,
         infinite: false,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: services.length < 3 ? services.length : 3,
         slidesToScroll: 1,
         initialSlide: 0,
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: services.length < 2 ? services.length : 2,
                     slidesToScroll: 1,
                 }
             },
@@ -59,9 +69,21 @@ export default function PopularServices() {
         router.push(`/workers?serviceId=${serviceId}`);
     };
 
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center">
+                <ThreeDots color="#4FB8B3" height={80} width={80} />
+            </div>
+        );
+    }
+
+    if (services.length === 0) {
+        return null;
+    }
+
     return (
-        <div className="mx-auto mt-4 py-4 md:py-6 max-w-screen-2xl px-2 md:px-28 mb-8">
-            <h2 className="text-lg pl-4 font-bold md:mb-6 mb-2 text-left text-black">Popular Services</h2>
+        <div className="mx-auto mt-4 py-4 md:py-6 max-w-screen-2xl px-2 md:px-28">
+            <h2 className="text-lg pl-4 font-bold md:mb-6 mb-2 text-left text-black">Recommended Services</h2>
             <Slider {...settings}>
                 {services.map((service, index) => (
                     <div key={index} className="p-4" onClick={() => handleServiceClick(service._id)}>

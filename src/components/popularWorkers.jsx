@@ -23,7 +23,7 @@ export default function PopularWorkers() {
                     return;
                 }
 
-                const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/workers/nearby', {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/workers/nearby`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'accept': '*/*'
