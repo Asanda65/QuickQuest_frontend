@@ -1,16 +1,13 @@
 'use client';
-import Navbar from "../components/Navbar";
-import RecommendedServices from "../components/RecommendedServices";
-import PopularWorkers from "../components/popularWorkers";
 import PopularServices from "../components/poplarServices";
 import Testimonials from "../components/Testimonial";
-import Footer from "../components/Footer";
 import './globals.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
-
+import RecommendedServices from "@/components/RecommendedServices";
+import PopularWorkers from "@/components/popularWorkers";
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +32,10 @@ export default function Home() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const isUserLoggedIn = () => {
+    return localStorage.getItem('user') !== null;
+  };
 
   return (
     <>
@@ -119,13 +120,15 @@ export default function Home() {
         </div>
       </div>
 
-      <RecommendedServices />
-      <PopularWorkers />
-
+      {isUserLoggedIn() && (
+        <>
+          <RecommendedServices />
+          <PopularWorkers />
+        </>
+      )}
 
       {/* Popular Services Section */}
       <PopularServices />
-
 
       <div className="flex mt-2">
         {/* Left side with image and gradient overlay */}
