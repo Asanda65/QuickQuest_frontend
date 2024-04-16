@@ -36,7 +36,7 @@ const BidForm = ({ category, services }) => {
           expireDate: new Date(formData.expiryDate).toISOString(),
         };
         const response = await axios.post(
-          "http://localhost:9000/v1/bids",
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/bids`,
           payload,
           {
             headers: {
@@ -44,7 +44,10 @@ const BidForm = ({ category, services }) => {
             },
           }
         );
-        Swal.fire("Success", "Bid created successfully", "success");
+        Swal.fire("Success", "Bid created successfully", "success").then(() => {
+          // Refresh the page after the alert is closed
+          window.location.reload();
+        });
         setFormData({
           serviceType: "",
           budget: "",
@@ -135,7 +138,7 @@ const BidForm = ({ category, services }) => {
             name="budget"
             placeholder={
               formData.serviceType
-                ? `Minimum ${
+                ? `Minimum $${
                     services.find(
                       (service) => service.name === formData.serviceType
                     ).startingPrice
