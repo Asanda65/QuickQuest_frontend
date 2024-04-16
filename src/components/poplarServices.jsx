@@ -11,7 +11,7 @@ export default function PopularServices() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/services');
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/services`);
         const allServices = response.data;
         const randomServices = getRandomServices(allServices, 5);
         setServices(randomServices);
