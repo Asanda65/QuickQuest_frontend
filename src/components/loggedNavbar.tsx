@@ -20,7 +20,7 @@ const LoggedNavbar = () => {
         <Link href="/">
           <span className="text-black hover:text-teal-500 text-base transition duration-500">Home</span>
         </Link>
-        <Link href="/post-job">
+        <Link href="/bids">
           <span className="text-black hover:text-teal-500 text-base transition duration-500">Bids</span>
         </Link>
         <Link href="/chat">
@@ -59,7 +59,7 @@ const LoggedNavbar = () => {
               <Link href="/">
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Home</span>
               </Link>
-              <Link href="/post-job">
+              <Link href="/bids">
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Bids</span>
               </Link>
               <Link href="/chat">

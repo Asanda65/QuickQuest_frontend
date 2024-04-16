@@ -121,74 +121,100 @@ const UserProfilePage = () => {
   const [pastOrders, setPastOrders] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
-      try {
-        // Delay of 2 seconds before fetching user profile
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
 
-        // Fetch user profile
-        const profileResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+    if (storedToken) {
+      fetchUserProfile(storedToken)
+        .then(() => fetchOngoingOrders(storedToken))
+        .then(() => fetchPastOrders(storedToken))
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+          setIsLoading(false);
         });
-
-        const { location, firstName, lastName, profileImage } = profileResponse.data;
-        const { coordinates } = location;
-        const [longitude, latitude] = coordinates;
-
-        // Reverse geocode the coordinates to get the location name
-        const geocodingUrl = `https://us1.locationiq.com/v1/reverse?key=${process.env.NEXT_PUBLIC_LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
-        const geocodingResponse = await fetch(geocodingUrl);
-        const geocodingData = await geocodingResponse.json();
-
-        const locationName = geocodingData.display_name || '';
-
-        setUserProfile({ firstName, lastName, profileImage, longitude, latitude, locationName });
-
-        // Delay of 2 seconds before fetching ongoing orders
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Fetch ongoing orders
-        const ongoingOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=PENDING`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setOngoingOrders(ongoingOrdersResponse.data);
-
-        // Delay of 2 seconds before fetching past orders
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Fetch past orders (canceled and delivered)
-        const pastOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=CANCELLED`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const canceledOrders = pastOrdersResponse.data;
-
-        const deliveredOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=COMPLETED`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const deliveredOrders = deliveredOrdersResponse.data;
-
-        setPastOrders([...canceledOrders, ...deliveredOrders]);
-
-        setIsLoading(false); // Hide loader after fetching all data
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setIsLoading(false); // Hide loader in case of error
-      }
-    };
-
-    fetchUserProfile();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
+
+  const fetchUserProfile = async (token) => {
+    try {
+      // Delay of 2 seconds before fetching user profile
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Fetch user profile
+      const profileResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const { location, firstName, lastName, profileImage } = profileResponse.data;
+      const { coordinates } = location;
+      const [longitude, latitude] = coordinates;
+
+      // Reverse geocode the coordinates to get the location name
+      const geocodingUrl = `https://us1.locationiq.com/v1/reverse?key=${process.env.NEXT_PUBLIC_LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
+      const geocodingResponse = await fetch(geocodingUrl);
+      const geocodingData = await geocodingResponse.json();
+
+      const locationName = geocodingData.display_name || '';
+
+      setUserProfile({ firstName, lastName, profileImage, longitude, latitude, locationName });
+
+      // Delay of 2 seconds before fetching ongoing orders
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      fetchOngoingOrders(token);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const fetchOngoingOrders = async (token) => {
+    try {
+      const ongoingOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=PENDING`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setOngoingOrders(ongoingOrdersResponse.data);
+
+      // Delay of 2 seconds before fetching past orders
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      fetchPastOrders(token);
+    } catch (error) {
+      console.error('Error fetching ongoing orders:', error);
+    }
+  };
+
+  const fetchPastOrders = async (token) => {
+    try {
+      const canceledOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=CANCELLED`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const canceledOrders = canceledOrdersResponse.data;
+
+      const deliveredOrdersResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs?status=COMPLETED`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const deliveredOrders = deliveredOrdersResponse.data;
+
+      setPastOrders([...canceledOrders, ...deliveredOrders]);
+      setIsLoading(false); // Hide loader after fetching all data
+    } catch (error) {
+      console.error('Error fetching past orders:', error);
+      setIsLoading(false); // Hide loader in case of error
+    }
+  };
 
   return (
     <>
