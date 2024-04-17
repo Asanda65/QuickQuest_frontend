@@ -1,10 +1,9 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import ChatSidebar from '../components/ChatSidebar';
-import ChatWindow from '../components/ChatWindow';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import '../styles/globals.css';
+import ChatSidebar from '../../components/ChatSidebar';
+import ChatWindow from '../../components/ChatWindow';
+import '../globals.css';
 
 export default function ChatPage() {
     // Presuming you fetch your chat list from somewhere, this would be your default chats array.
@@ -23,7 +22,6 @@ export default function ChatPage() {
                 <title>Chat Interface</title>
             </Head>
             <div className='flex flex-col h-screen'>
-                <Navbar />
                 <div className="flex h-screen  my-10 overflow-hidden align-center justify-center">
                     {/* Pass setActiveChat to ChatSidebar to update the activeChat when a chat is selected */}
                     <ChatSidebar chats={defaultChats} onSelectChat={setActiveChat} />
@@ -31,7 +29,7 @@ export default function ChatPage() {
                     <div className='mb-4'><ChatWindow activeChat={activeChat} /></div>
                 </div>
             </div>
-            <Footer />
+
         </>
     );
 }
