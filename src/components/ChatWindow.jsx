@@ -32,7 +32,7 @@ export default function ChatWindow({ activeChat }) {
   const sendMessage = async () => {
     if (newMessage.trim() !== '') {
       try {
-        await axios.post(`https://api.quick-quest.dfanso.dev/v1/chats/${activeChat._id}/messages`, {
+        await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/chats/${activeChat._id}/messages`, {
           content: newMessage,
         }, {
           headers: {
@@ -48,7 +48,7 @@ export default function ChatWindow({ activeChat }) {
 
   useEffect(() => {
     if (activeChat) {
-      const sse = new EventSource(`https://api.quick-quest.dfanso.dev/v1/chats/${activeChat._id}/sse`);
+      const sse = new EventSource(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/chats/${activeChat._id}/sse`);
       setSseConnection(sse);
 
       sse.onmessage = (event) => {
@@ -106,6 +106,8 @@ export default function ChatWindow({ activeChat }) {
                     deliveryDate: message.content.deliveryDate,
                     expireDate: message.content.expireDate,
                     icon: message.content.service.category.iconUrl,
+                    status: message.content.status,
+                    _id: message.content._id,
                     }}
                 />
                 ) : (

@@ -15,7 +15,7 @@ export default function ChatPage() {
     useEffect(() => {
         const fetchChats = async () => {
           try {
-            const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/chats', {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/chats`, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
               },

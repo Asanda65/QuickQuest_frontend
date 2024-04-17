@@ -1,9 +1,19 @@
+import React from 'react';
 import Link from 'next/link';
 import { MdOutlineTimer, MdOutlineLocalOffer } from "react-icons/md";
 
 export default function ServiceOffer({ offer }) {
+  const isOfferAcceptedOrExpired = offer.status === 'ACCEPTED' || new Date(offer.expireDate) < new Date();
+
   return (
-    <div className="w-full p-4 bg-white rounded-lg shadow-md my-4" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '10px', background: '#FFF' }}>
+    <div
+      className="w-full p-4 bg-white rounded-lg shadow-md my-4"
+      style={{
+        boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)',
+        borderRadius: '10px',
+        background: '#FFF',
+      }}
+    >
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <div className="icon text-white rounded-full p-2 mr-2">
@@ -27,9 +37,18 @@ export default function ServiceOffer({ offer }) {
         </div>
       </div>
       <div className="text-right">
-        <Link href="/serviceAcceptOffer">
-          <button className="bg-teal-500 text-white py-2 px-4 rounded-lg">Accept Offer</button>
-        </Link>
+        {isOfferAcceptedOrExpired ? (
+          <button
+            className="bg-gray-400 text-white py-2 px-4 rounded-lg cursor-not-allowed"
+            disabled
+          >
+            {offer.status}
+          </button>
+        ) : (
+            <Link href={`/acceptOffer?offerId=${offer._id}`}>
+            <button className="bg-teal-500 text-white py-2 px-4 rounded-lg">Accept Offer</button>
+          </Link>
+        )}
       </div>
     </div>
   );
