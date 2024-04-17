@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
             <IoCheckmarkCircleOutline className="text-teal-500 text-6xl" />
             <h2 className="text-xl font-semibold text-teal-900 mt-4">Payment succeeded</h2>
             <p className="text-gray-600 mt-4 mb-6">Thank you for your purchase</p>
-            <Link href="/ongoing-orders">
+            <Link href="/profile">
               <span className="bg-teal-500 text-white py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
                 Go to Ongoing Orders
               </span>
