@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ServiceOffer from './ServiceOffer';
+import ServiceOffer from './serviceOffer';
 import { FaSearch } from 'react-icons/fa';
 import { IoCallOutline } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
