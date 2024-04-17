@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner';
 import { useSearchParams } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 const LabourPublicPage = () => {
   const [worker, setWorker] = useState(null);
@@ -59,6 +60,52 @@ const LabourPublicPage = () => {
   useEffect(() => {
     fetchWorkerProfile();
   }, []);
+
+  const handleQuickChat = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to start a quick chat.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#4FB8B3',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, start chat',
+    });
+  
+    if (result.isConfirmed) {
+
+      const storedUser = localStorage.getItem('user');
+          const parsedUser = JSON.parse(storedUser);
+
+      if (parsedUser) {
+        try {
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/chats`,
+            {
+              workerId: worker._id,
+              customerId: parsedUser._id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+            }
+          );
+  
+          if (response.status === 201) {
+            router.push('/chat');
+          } else {
+            Swal.fire('Error', 'Failed to start the chat.', 'error');
+          }
+        } catch (error) {
+          console.error('Error starting the chat:', error);
+          Swal.fire('Error', 'An error occurred while starting the chat.', 'error');
+        }
+      } else {
+        Swal.fire('Error', 'User ID not found in local storage.', 'error');
+      }
+    }
+  };
 
   const cardStyle = {
     borderRadius: '15px',
@@ -123,7 +170,10 @@ const LabourPublicPage = () => {
           <div style={cardStyle} className="bg-white p-4 flex-1 w-full flex flex-col justify-between md:min-h-96">
             <div className="bg-teal-500 text-white text-lg font-semibold rounded-t-xl p-2 text-center">Contact Me</div>
             <div className="flex flex-col items-center justify-center flex-grow">
-              <button className="border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white font-semibold py-2 px-4 rounded-md w-full mt-6 md:mt-0 md:w-2/5 mb-2 transition ease-in duration-200">
+            <button
+                className="border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white font-semibold py-2 px-4 rounded-md w-full mt-6 md:mt-0 md:w-2/5 mb-2 transition ease-in duration-200"
+                onClick={handleQuickChat}
+              >
                 Quick Chat
               </button>
               <button className="bg-teal-800 hover:bg-teal-900 text-white font-semibold py-2 px-4 rounded-md w-full md:w-2/5 mb-4 transition ease-in duration-200">
