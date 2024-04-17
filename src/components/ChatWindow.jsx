@@ -7,12 +7,14 @@ import { IoIosAttach } from "react-icons/io";
 import { LuSend } from "react-icons/lu";
 import { CiFaceSmile } from "react-icons/ci";
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function ChatWindow({ activeChat }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newMessage, setNewMessage] = useState('');
+  const [sseConnection, setSseConnection] = useState(null);
 
   const openModal = () => {
     setModalOpen(true);
@@ -20,21 +22,6 @@ export default function ChatWindow({ activeChat }) {
 
   const closeModal = () => {
     setModalOpen(false);
-  };
-
-  const fetchMessages = async (chatId) => {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`https://api.quick-quest.dfanso.dev/v1/chats/${chatId}/messages`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setMessages(response.data.messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
-    setIsLoading(false);
   };
 
   const sendMessage = async () => {
@@ -48,7 +35,6 @@ export default function ChatWindow({ activeChat }) {
           },
         });
         setNewMessage('');
-        fetchMessages(activeChat._id);
       } catch (error) {
         console.error('Error sending message:', error);
       }
@@ -57,12 +43,24 @@ export default function ChatWindow({ activeChat }) {
 
   useEffect(() => {
     if (activeChat) {
-      fetchMessages(activeChat._id);
+      const sse = new EventSource(`https://api.quick-quest.dfanso.dev/v1/chats/${activeChat._id}/sse`);
+      setSseConnection(sse);
+
+      sse.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        setMessages(data.messages);
+      };
+
+      return () => {
+        sse.close();
+      };
     }
   }, [activeChat]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center h-screen">
+    <ThreeDots color="#4FB8B3" height={80} width={80} />
+  </div>;
   }
 
   return (
@@ -93,7 +91,7 @@ export default function ChatWindow({ activeChat }) {
           >
             <div className={`max-w-2/3 p-2 my-1 rounded-lg ${message.sender === 'customer' ? 'bg-teal-600' : 'bg-teal-400'}`}>
               <p className="text-sm">{message.content}</p>
-              <p className="text-xs text-gray-300 text-right">{new Date(message.createdAt).toLocaleString()}</p>
+              <p className="text-xs text-gray-300 text-right">{new Date(message.timestamp).toLocaleString()}</p>
             </div>
           </div>
         ))}
@@ -104,7 +102,7 @@ export default function ChatWindow({ activeChat }) {
       {/* Input for sending messages */}
       <div className="flex items-center p-2">
         <input
-          className="flex-grow p-2 border rounded"
+          className="flex-grow p-2 border rounded text-black"
           placeholder="Type a message..."
           style={{ background: '#CAE9E8', borderRadius: '10px' }}
           value={newMessage}
