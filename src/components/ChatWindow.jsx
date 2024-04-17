@@ -16,6 +16,9 @@ export default function ChatWindow({ activeChat }) {
   const [newMessage, setNewMessage] = useState('');
   const [sseConnection, setSseConnection] = useState(null);
 
+  const storedUser = localStorage.getItem('user');
+          const parsedUser = JSON.parse(storedUser);
+
   const openModal = () => {
     setModalOpen(true);
   };
@@ -87,9 +90,9 @@ export default function ChatWindow({ activeChat }) {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`flex items-end ${message.sender === 'customer' ? 'justify-end' : 'justify-start'}`}
+            className={`flex items-end ${message.sender === parsedUser._id ? 'justify-end' : 'justify-start'}`}
           >
-            <div className={`max-w-2/3 p-2 my-1 rounded-lg ${message.sender === 'customer' ? 'bg-teal-600' : 'bg-teal-400'}`}>
+            <div className={`max-w-2/3 p-2 my-1 rounded-lg ${message.sender === parsedUser._id ? 'bg-teal-600' : 'bg-teal-400'}`}>
               <p className="text-sm">{message.content}</p>
               <p className="text-xs text-gray-300 text-right">{new Date(message.timestamp).toLocaleString()}</p>
             </div>
@@ -97,7 +100,6 @@ export default function ChatWindow({ activeChat }) {
         ))}
       </div>
 
-      <ServiceOffer />
 
       {/* Input for sending messages */}
       <div className="flex items-center p-2">
