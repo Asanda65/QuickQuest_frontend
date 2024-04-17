@@ -5,6 +5,7 @@ import ChatSidebar from '../../components/ChatSidebar';
 import ChatWindow from '../../components/ChatWindow';
 import '../globals.css';
 import axios from 'axios';
+import AuthRoute from '../(auth)/AuthRoute';
 
 export default function ChatPage() {
     const [chats, setChats] = useState([]);
@@ -30,8 +31,10 @@ export default function ChatPage() {
       }, []);
 
 
+
     return (
         <>
+        <AuthRoute>
             <Head>
                 <title>Chat Interface</title>
             </Head>
@@ -43,6 +46,7 @@ export default function ChatPage() {
                     <div className='mb-4'><ChatWindow activeChat={activeChat} /></div>
                 </div>
             </div>
+            </AuthRoute>
 
         </>
     );
