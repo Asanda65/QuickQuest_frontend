@@ -80,7 +80,7 @@ const LabourPublicPage = () => {
       if (parsedUser) {
         try {
           const response = await axios.post(
-            'https://api.quick-quest.dfanso.dev/v1/chats',
+            `${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/chats`,
             {
               workerId: worker._id,
               customerId: parsedUser._id,
