@@ -34,6 +34,15 @@ export default function SignUp() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    profileImage: '',
+    location: '',
+  });
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -52,7 +61,17 @@ export default function SignUp() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setLoading(true);
+
+    // Validate form fields
+    const validationErrors = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      profileImage: '',
+      location: '',
+    };
 
     const form = event.target as HTMLFormElement;
     const firstName = (form.elements.namedItem('first-name') as HTMLInputElement).value;
@@ -61,46 +80,58 @@ export default function SignUp() {
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
     const confirmPassword = (form.elements.namedItem('confirm-password') as HTMLInputElement).value;
 
-    // Input validations
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      Swal.fire('Error', 'Please fill in all the required fields.', 'error');
-      setLoading(false);
-      return;
+    if (!firstName) {
+      validationErrors.firstName = 'First name is required';
     }
-
-    if (!emailRegex.test(email)) {
-      Swal.fire('Error', 'Please enter a valid email address.', 'error');
-      setLoading(false);
-      return;
+    if (!lastName) {
+      validationErrors.lastName = 'Last name is required';
     }
-
-    if (!passwordRegex.test(password)) {
-      Swal.fire(
-        'Error',
-        'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-        'error'
-      );
-      setLoading(false);
-      return;
+    if (!email) {
+      validationErrors.email = 'Email is required';
+    } else if (!emailRegex.test(email)) {
+      validationErrors.email = 'Please enter a valid email address';
     }
-
-    if (password !== confirmPassword) {
-      Swal.fire('Error', 'Passwords do not match.', 'error');
-      setLoading(false);
-      return;
+    if (!password) {
+      validationErrors.password = 'Password is required';
+    } else if (password.length < 8) {
+      validationErrors.password = 'Password must be at least 8 characters long';
+    } else if (!/[A-Z]/.test(password)) {
+      validationErrors.password = 'Password must contain at least one uppercase letter';
+    } else if (!/[a-z]/.test(password)) {
+      validationErrors.password = 'Password must contain at least one lowercase letter';
+    } else if (!/\d/.test(password)) {
+      validationErrors.password = 'Password must contain at least one number';
+    } else if (!/[@$!%*?&|#]/.test(password)) {
+      validationErrors.password = 'Password must contain at least one special character';
     }
-
+    if (!confirmPassword) {
+      validationErrors.confirmPassword = 'Confirm password is required';
+    } else if (password !== confirmPassword) {
+      validationErrors.confirmPassword = 'Passwords do not match';
+    }
     if (!selectedImage) {
-      Swal.fire('Error', 'Please select an image.', 'error');
-      setLoading(false);
-      return;
+      validationErrors.profileImage = 'Please select an image';
+    }
+    if (!location || (location.lat === 0 && location.lng === 0)) {
+      validationErrors.location = 'Please select a valid location';
     }
 
-    if (!location || (location.lat === 0 && location.lng === 0)) {
-      Swal.fire('Error', 'Please select a valid location.', 'error');
-      setLoading(false);
+    if (
+      validationErrors.firstName ||
+      validationErrors.lastName ||
+      validationErrors.email ||
+      validationErrors.password ||
+      validationErrors.confirmPassword ||
+      validationErrors.profileImage ||
+      validationErrors.location
+    ) {
+      setErrors(validationErrors);
       return;
     }
+    console.log('Password:', password);
+console.log('Password regex test:', passwordRegex.test(password));
+
+    setLoading(true);
 
     try {
       let profileImage = '';
@@ -162,6 +193,7 @@ export default function SignUp() {
               </div>
             </label>
           </div>
+          {errors.profileImage && <p className="text-red-500 text-xs mt-1">{errors.profileImage}</p>}
 
           {loading ? (
             <div className="flex items-center justify-center">
@@ -172,30 +204,56 @@ export default function SignUp() {
               <div className="flex gap-4 mb-1">
                 <div className="w-1/2">
                   <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">First Name</label>
-                  <input type="text" id="first-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                  <input
+                    type="text"
+                    id="first-name"
+                    className={`mt-1 block w-full border ${errors.firstName ? 'border-red-500' : 'border-green-800'} p-1 rounded-md shadow-sm`}
+                  />
+                  {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
                 </div>
                 <div className="w-1/2">
                   <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last Name</label>
-                  <input type="text" id="last-name" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                  <input
+                    type="text"
+                    id="last-name"
+                    className={`mt-1 block w-full border ${errors.lastName ? 'border-red-500' : 'border-green-800'} p-1 rounded-md shadow-sm`}
+                  />
+                  {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
                 </div>
               </div>
 
               <div className="flex flex-col mb-1">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                <input
+                  type="email"
+                  id="email"
+                  className={`mt-1 block w-full border ${errors.email ? 'border-red-500' : 'border-green-800'} p-1 rounded-md shadow-sm`}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
 
               <div className="flex flex-col mb-1">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password *</label>
-                <input type="password" id="password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                <input
+                  type="password"
+                  id="password"
+                  className={`mt-1 block w-full border ${errors.password ? 'border-red-500' : 'border-green-800'} p-1 rounded-md shadow-sm`}
+                />
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
 
               <div className="flex flex-col mb-1">
                 <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                <input type="password" id="confirm-password" className="mt-1 block w-full border border-green-800 p-1 rounded-md shadow-sm" />
+                <input
+                  type="password"
+                  id="confirm-password"
+                  className={`mt-1 block w-full border ${errors.confirmPassword ? 'border-red-500' : 'border-green-800'} p-1 rounded-md shadow-sm`}
+                />
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
 
               <LocationPicker onLocationSelect={handleLocationSelect} />
+              {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
 
               <hr className="border-gray-300 my-4" />
 
