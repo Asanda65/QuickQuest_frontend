@@ -158,7 +158,7 @@ console.log('Password regex test:', passwordRegex.test(password));
 
       Swal.fire('Success', 'Your account has been created successfully!', 'success').then(() => {
         // Redirect to verification page
-        window.location.href = '/verifyEmail';
+        window.location.href = `/verifyEmail?email=${email}`;
       });
     } catch (error) {
       console.error('Error creating account:', error);

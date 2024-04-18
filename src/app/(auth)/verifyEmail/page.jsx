@@ -1,20 +1,28 @@
 "use client";
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams } from 'next/navigation';
 import '../../globals.css';
-import { useState, useRef } from 'react';
+import { useState, useRef ,useEffect} from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 
 export default function VerifyEmail() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
+  const router = useRouter(); 
+  const [inputEmail, setInputEmail] = useState(''); 
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [isLoading, setIsLoading] = useState(false);
   const inputRefs = useRef([]);
 
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams) {
+      setInputEmail(searchParams.get('email') || '');
+    }
+  }, [searchParams]);
+
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setInputEmail(e.target.value);
   };
 
   const handleOtpChange = (e, index) => {
@@ -43,7 +51,7 @@ export default function VerifyEmail() {
     setIsLoading(true);
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/request-verification-code`, {
-        email: email,
+        email: inputEmail,
       });
       Swal.fire('OTP Resent', 'A new OTP has been sent to your email.', 'success');
     } catch (error) {
@@ -54,7 +62,7 @@ export default function VerifyEmail() {
   };
 
   const handleConfirm = async () => {
-    if (!validateEmail(email)) {
+    if (!validateEmail(inputEmail)) {
       Swal.fire('Invalid Email', 'Please enter a valid email address.', 'error');
       return;
     }
@@ -67,7 +75,7 @@ export default function VerifyEmail() {
     setIsLoading(true);
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/verify`, {
-        email: email,
+        email: inputEmail,
         confirmationCode: otp.join(''),
       });
       router.push("/login");
@@ -100,7 +108,7 @@ export default function VerifyEmail() {
               <input
                 type="email"
                 id="email"
-                value={email}
+                value={inputEmail}
                 onChange={handleEmailChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-black"
                 placeholder="Enter your email"
