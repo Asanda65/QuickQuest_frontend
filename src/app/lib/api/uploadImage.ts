@@ -2,11 +2,14 @@ import axios from 'axios';
 
 const uploadImage = async (file: File): Promise<string> => {
   try {
+    // Replace spaces in the file name with underscores
+    const sanitizedFileName = file.name.replace(/\s+/g, '_');
+
     // Generate pre-signed URL
     const presignedUrlResponse = await axios.post<{ presignedUrl: string; s3url: string }>(
-      'https://api.quick-quest.dfanso.dev/v1/s3/generate-presigned-url',
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/s3/generate-presigned-url`,
       {
-        fileName: file.name,
+        fileName: sanitizedFileName,
         domain: 'DP',
         contentType: file.type,
       }
@@ -16,7 +19,7 @@ const uploadImage = async (file: File): Promise<string> => {
 
     // Check if the URL is valid
     if (presignedUrl && presignedUrl.startsWith('http')) {
-      // Upload image to S3
+      // Upload image to S3 using the pre-signed URL
       await axios.put(presignedUrl, file, {
         headers: {
           'Content-Type': file.type,
