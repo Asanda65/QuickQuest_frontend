@@ -7,7 +7,7 @@ export default function ServiceOffer({ offer }) {
 
   return (
     <div
-      className="w-full p-4 bg-white rounded-lg shadow-md my-4"
+      className="md:w-3/5 w-full p-4 bg-white rounded-lg shadow-md my-4"
       style={{
         boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)',
         borderRadius: '10px',
@@ -45,7 +45,7 @@ export default function ServiceOffer({ offer }) {
             {offer.status}
           </button>
         ) : (
-            <Link href={`/acceptOffer?offerId=${offer._id}`}>
+          <Link href={`/acceptOffer?offerId=${offer._id}`}>
             <button className="bg-teal-500 text-white py-2 px-4 rounded-lg">Accept Offer</button>
           </Link>
         )}

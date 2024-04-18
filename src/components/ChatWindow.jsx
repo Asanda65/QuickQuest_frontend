@@ -62,16 +62,16 @@ export default function ChatWindow({ activeChat }) {
     }
   }, [activeChat]);
 
-  
+
 
   if (isLoading) {
     return <div className="flex items-center justify-center h-screen">
-    <ThreeDots color="#4FB8B3" height={80} width={80} />
-  </div>;
+      <ThreeDots color="#4FB8B3" height={80} width={80} />
+    </div>;
   }
 
   return (
-    <div className="flex m-2 flex-col h-full w-full p-4" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
+    <div className="flex md:text-base text-xs m-2 flex-col h-full w-full p-2 md:p-4" style={{ boxShadow: '0px 0px 4px 2px rgba(79, 184, 179, 0.25)', borderRadius: '10px' }}>
       {/* Chat header */}
       {activeChat && (
         <div className="flex justify-between items-center p-2 border-b border-gray-300">
@@ -91,33 +91,33 @@ export default function ChatWindow({ activeChat }) {
 
       {/* Chat messages */}
       <div className="flex-grow overflow-auto p-2">
-      {messages.map((message) => (
-            <div
-                key={message._id}
-                className={`flex items-end ${message.sender === parsedUser._id ? 'justify-end' : 'justify-start'}`}
-            >
-                {message.contentType === 'OFFER' ? (
-                <ServiceOffer
-                    offer={{
-                    service: message.content.service,
-                    worker: message.content.worker,
-                    price: message.content.price,
-                    description: message.content.description,
-                    deliveryDate: message.content.deliveryDate,
-                    expireDate: message.content.expireDate,
-                    icon: message.content.service.category.iconUrl,
-                    status: message.content.status,
-                    _id: message.content._id,
-                    }}
-                />
-                ) : (
-                <div className={`max-w-2/3 p-2 my-1 rounded-lg ${message.sender === parsedUser._id ? 'bg-teal-600' : 'bg-teal-400'}`}>
-                    <p className="text-sm">{message.content}</p>
-                    <p className="text-xs text-gray-300 text-right">{new Date(message.timestamp).toLocaleString()}</p>
-                </div>
-                )}
-            </div>
-            ))}
+        {messages.map((message) => (
+          <div
+            key={message._id}
+            className={`flex items-end ${message.sender === parsedUser._id ? 'justify-end' : 'justify-start'}`}
+          >
+            {message.contentType === 'OFFER' ? (
+              <ServiceOffer
+                offer={{
+                  service: message.content.service,
+                  worker: message.content.worker,
+                  price: message.content.price,
+                  description: message.content.description,
+                  deliveryDate: message.content.deliveryDate,
+                  expireDate: message.content.expireDate,
+                  icon: message.content.service.category.iconUrl,
+                  status: message.content.status,
+                  _id: message.content._id,
+                }}
+              />
+            ) : (
+              <div className={`max-w-2/3 p-2 my-1 rounded-lg ${message.sender === parsedUser._id ? 'bg-teal-600' : 'bg-teal-400'}`}>
+                <p className="text-sm">{message.content}</p>
+                <p className="text-xs text-gray-300 text-right">{new Date(message.timestamp).toLocaleString()}</p>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Input for sending messages */}
