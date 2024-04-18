@@ -99,7 +99,7 @@ export default function LabourPageServices() {
                                         <img src={service.imageUrl} alt={service.name} className="w-full h-60 object-cover" />
                                         <div className="p-4">
                                             <h3 className="text-lg font-medium text-black">{service.name}</h3>
-                                            <p className="text-gray-500">Starting at {service.startingPrice}</p>
+                                            <p className="text-gray-500">Starting at ${service.startingPrice}</p>
                                         </div>
                                     </div>
                                 </div>

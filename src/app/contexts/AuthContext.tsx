@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 
 interface User {
   location: {
@@ -47,29 +46,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkUserAuthentication = async () => {
       try {
-        const storedToken = localStorage.getItem('token');
-        if (!storedToken) {
-          console.error('No token found');
-          setLoading(false);
-          return;
-        }
-  
-        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
-          headers: {
-            'Authorization': `Bearer ${storedToken}`
-          }
-        });
-  
-        if (data) {
-          setUser(data.user); // Assuming the response has a user object
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const parsedUser: User = JSON.parse(storedUser);
+          setUser(parsedUser);
         }
       } catch (error) {
-        console.error('Error retrieving user from API:', error);
+        console.error('Error retrieving user from local storage:', error);
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1300);
       }
     };
-  
+
     checkUserAuthentication();
   }, []);
 
@@ -77,10 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check if user status is UNVERIFIED and redirect to verifyEmail page
     if (user && user.status === 'UNVERIFIED') {
       router.push('/verifyEmail');
-    }else if (user?.type === 'WORKER'){
-      router.push('https://worker.quick-quest.vercel.app/login');
     }
-    
   }, [user, router]);
 
   useEffect(() => {

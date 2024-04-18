@@ -190,11 +190,7 @@ const LabourPublicPage = () => {
       )}
       {worker && worker.services && <LabourPageServices workerServices={worker.services} />}
       <div className="flex flex-col items-center justify-center flex-grow mb-6">
-        <Link href="/servicePage">
-          <button className="border-2 border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white font-semibold py-1.5 px-8 rounded-md  mb-2 transition ease-in duration-200">
-            View All
-          </button>
-        </Link>
+
       </div>
       {worker && worker.feedbacks && <CustomerFeedback feedbacks={worker.feedbacks} />}
     </>
