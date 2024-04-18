@@ -55,9 +55,13 @@ export default function Login() {
         event.currentTarget.email.value,
         event.currentTarget.password.value
       );
-      localStorage.setItem('token', token);
+      
       const fetchedUser = await fetchUserProfile(token);
+    if (fetchedUser.type === 'WORKER') {
+      router.push('https://worker.quick-quest.vercel.app/login');
+    } else {
       setUser(fetchedUser);
+      localStorage.setItem('token', token);
 
       Swal.fire({
         icon: 'success',
@@ -67,6 +71,7 @@ export default function Login() {
       }).then(() => {
         router.push('/');
       });
+    }
     } catch (error) {
       console.error('Login failed:', error);
       Swal.fire({

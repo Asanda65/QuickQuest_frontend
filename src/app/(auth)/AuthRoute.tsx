@@ -25,6 +25,10 @@ const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
     router.push('/verifyEmail');
     return null;
   }
+  if (user.type === 'WORKER') {
+    router.push('https://worker.quick-quest.vercel.app/login');
+    return null;
+  }
 
   return <>{children}</>;
 };
