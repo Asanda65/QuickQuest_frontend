@@ -10,65 +10,65 @@ const LocationPicker = ({ onLocationSelect }) => {
     const markerRef = useRef(null);
 
     useEffect(() => {
-        if (window.google && window.google.maps && window.google.maps.places) {
-            initializeMap();
-            initializeAutocomplete();
-        } else {
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_API_KEY}&libraries=places`;
-            script.async = true;
-            document.body.appendChild(script);
-            script.onload = () => {
+        if (showMap) {
+            if (window.google && window.google.maps && window.google.maps.places) {
                 initializeMap();
                 initializeAutocomplete();
-            };
+            } else {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_API_KEY}&libraries=places`;
+                script.async = true;
+                document.body.appendChild(script);
+                script.onload = () => {
+                    initializeMap();
+                    initializeAutocomplete();
+                };
+            }
         }
     }, [showMap]);
 
     const initializeMap = () => {
-        if (mapRef.current && !mapInstanceRef.current) {
-            const initialPosition = { lat: 0, lng: 0 };
-            mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
-                center: initialPosition,
-                zoom: 2,
-            });
+        const initialPosition = { lat: 0, lng: 0 };
+        mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+            center: initialPosition,
+            zoom: 2,
+        });
 
-            markerRef.current = new window.google.maps.Marker({
-                position: initialPosition,
-                map: mapInstanceRef.current,
-                draggable: true,
-            });
+        markerRef.current = new window.google.maps.Marker({
+            position: initialPosition,
+            map: mapInstanceRef.current,
+            draggable: true,
+        });
 
-            markerRef.current.addListener('dragend', handleMarkerDrag);
-        }
+        markerRef.current.addListener('dragend', handleMarkerDrag);
     };
 
     const initializeAutocomplete = () => {
         const input = document.getElementById('location');
         const autocomplete = new window.google.maps.places.Autocomplete(input);
-      
+
         if (mapInstanceRef.current) {
-          autocomplete.bindTo('bounds', mapInstanceRef.current);
+            autocomplete.bindTo('bounds', mapInstanceRef.current);
         }
-      
+
         autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace();
-          if (!place.geometry || !place.geometry.location) {
-            console.log("Returned place contains no geometry");
-            return;
-          }
-          const location = place.geometry.location;
-      
-          if (mapInstanceRef.current) {
-            mapInstanceRef.current.setCenter(location);
-            mapInstanceRef.current.setZoom(15);
-          }
-      
-          if (markerRef.current) {
-            markerRef.current.setPosition(location);
-          }
+            const place = autocomplete.getPlace();
+            if (!place.geometry || !place.geometry.location) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+            const location = place.geometry.location;
+
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.setCenter(location);
+                mapInstanceRef.current.setZoom(15);
+            }
+
+            if (markerRef.current) {
+                markerRef.current.setPosition(location);
+            }
         });
-      };
+    };
 
     const handleIconClick = () => {
         setShowMap(!showMap);

@@ -29,6 +29,9 @@ export default function SSOSignup() {
               'Authorization': `Bearer ${token}`,
             },
           });
+          if (response.data.status !== "GOOGLEAUTH") {
+            router.push("/");
+          }
 
           setUserProfile(response.data);
           setImagePreview(response.data.profileImage);
