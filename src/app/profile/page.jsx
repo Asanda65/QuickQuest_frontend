@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { FaMapMarkerAlt } from 'react-icons/fa';
@@ -8,8 +9,22 @@ import AuthRoute from '../(auth)/AuthRoute';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import Swal from 'sweetalert2';
+import RatingComponent from '../../components/Rating';
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const OrderCard = ({ order }) => {
+
+  const [showRating, setShowRating] = useState(false);
+
+
+  const handleCompleteOrderRating = () => {
+    // You can implement whatever needs to happen before showing the rating
+    // For instance, setting loading states or completing an order process
+    setShowRating(true); // This will trigger the rating modal to appear
+  };
+
+
+
   const { _id, service, worker, orderedDate, deliveryDate, price } = order;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -55,7 +70,7 @@ const OrderCard = ({ order }) => {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       Swal.fire('Order Completed', response.data.message, 'success');
       window.location.href = '/profile';
     } catch (error) {
@@ -78,11 +93,28 @@ const OrderCard = ({ order }) => {
       <div className='flex md:mt-0 mt-2'>
         <button
           className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded"
-          onClick={handleCompleteOrder}
+          onClick={handleCompleteOrderRating}
           disabled={isLoading}
         >
           Mark as Complete
         </button>
+
+        {showRating && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg max-w-sm w-full">
+              <button
+                className="mt-0 text-white rounded"
+                onClick={() => setShowRating(false)}
+              >
+                <IoMdCloseCircleOutline className='text-red-500 hover:text-red-700  text-3xl' />
+              </button>
+              <RatingComponent />
+
+            </div>
+          </div>
+        )}
+
+
         <button
           className="ml-2 bg-transparent hover:bg-red-500 text-red-500 duration-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded"
           onClick={handleCancelOrder}
@@ -108,9 +140,13 @@ const PastOrderCard = ({ order }) => {
       <span>Due on {new Date(deliveryDate).toLocaleDateString()}</span>
       <span>${price}</span>
       <div className='flex md:mt-0 mt-2'>
-        <button className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded">
+        <button
+          className={`${status === 'CANCELLED' ? 'bg-red-500 ' : 'bg-teal-500'
+            }  text-white py-1.5 px-4 rounded`}
+        >
           {status === 'CANCELLED' ? 'Cancelled' : 'Delivered'}
         </button>
+
       </div>
     </div>
   );
@@ -231,6 +267,18 @@ const UserProfilePage = () => {
             <div className="flex items-center justify-center mt-1">
               <FaMapMarkerAlt className='text-teal-500 mr-1' />
               <span className='text-sm'>{userProfile?.locationName}</span>
+            </div>
+            <div className="flex items-center justify-center mt-4">
+              <Link href='/editProfile'>
+                <button className="w-32 bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded">
+                  Edit Profile
+                </button>
+              </Link>
+            </div>
+            <div className="flex items-center justify-center mt-4">
+              <button className="w-32 bg-red-500 hover:bg-red-700 duration-700 text-white py-1.5 px-4 rounded">
+                Log Out
+              </button>
             </div>
             <div className='mx-4 sm:mx-20'>
               {ongoingOrders.length > 0 && (
