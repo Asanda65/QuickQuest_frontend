@@ -42,6 +42,7 @@ const Footer = () => {
                         <li className='pb-4'><Link href="/instagram"><span>Instagram</span></Link></li>
                         <li className='pb-4'><Link href="/twitter"><span>Twitter</span></Link></li>
                         <li className='pb-4'><Link href="/facebook"><span>Facebook</span></Link></li>
+                        <li className='pb-4'><Link href="mailto:support@quick-quest.com"><span>Support@quick-quest.com</span></Link></li>
                     </ul>
                 </div>
             </div>

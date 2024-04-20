@@ -80,10 +80,10 @@ const OneServicePage = () => {
       {isUserLoggedIn && <ServicePopularWorkers serviceId={sId} />}
 
       <div className="flex justify-between items-center mb-6 mt-6 lg:px-16">
-        
+
         <div>
           <div className="relative">
-            
+
 
             {dropdownOpen && (
               <ul className="absolute z-10 mt-1 w-32 border border-gray-200 bg-white shadow-md rounded-md py-1">
@@ -102,7 +102,7 @@ const OneServicePage = () => {
 
       <div className='mb-6'></div>
 
-      <Footer />
+
     </>
   );
 };

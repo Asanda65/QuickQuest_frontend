@@ -44,27 +44,27 @@ export default function ServicePopularWorkers({ serviceId }) {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: workers.length < 5 ? workers.length : 5, // Ensures the slider shows all workers if fewer than 5
     slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: workers.length < 3 ? workers.length : 3, // Show all workers if fewer than 3 for devices wider than 1024px
           slidesToScroll: 1,
         }
       },
       {
         breakpoint: 768, // For tablets
         settings: {
-          slidesToShow: 2,
+          slidesToShow: workers.length < 2 ? workers.length : 2, // Show all workers if fewer than 2 for devices wider than 768px
           slidesToScroll: 1,
         }
       },
       {
         breakpoint: 600, // For mobile
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 1, // Always show 1 worker on the smallest screens
           slidesToScroll: 1
         }
       }
@@ -77,16 +77,16 @@ export default function ServicePopularWorkers({ serviceId }) {
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 lg:px-16 py-6">
-      
+      <h1 className="text-xl font-semibold text-gray-800 mb-6 pl-8 md:pl-0">Recommended Workers Around You</h1>
       {isLoading ? (
         <div className="flex items-center justify-center">
           <ThreeDots color="#4FB8B3" height={80} width={80} />
         </div>
       ) : workers.length === 1 ? (
         <div className="px-4">
-          <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
+          {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
           <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
-            
+
             <img
               src={workers[0].profileImage}
               alt={`${workers[0].firstName} ${workers[0].lastName}`}
@@ -111,10 +111,10 @@ export default function ServicePopularWorkers({ serviceId }) {
             </div>
           </div>
         </div>
-      ) : workers.length < 5 ? (
+      ) : workers.length < 2 ? (
         workers.map((worker, index) => (
           <div key={index} className="px-4">
-            <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
+            {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
             <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
               <img
                 src={worker.profileImage}
@@ -145,7 +145,7 @@ export default function ServicePopularWorkers({ serviceId }) {
         <Slider {...settings}>
           {workers.map((worker, index) => (
             <div key={index} className="px-4">
-              <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2>
+              {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
               <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
                 <img
                   src={worker.profileImage}
