@@ -11,11 +11,18 @@ const LoggedNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useAuth();
 
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="flex items-center justify-between p-4 shadow-md relative">
-      <div className="text-3xl font-bold text-teal-500">
-        QuickQuest
-      </div>
+      <Link href="/">
+        <div className="text-3xl font-bold text-teal-500">
+          QuickQuest
+        </div>
+      </Link>
       <div className="hidden md:flex space-x-10">
         <Link href="/">
           <span className="text-black hover:text-teal-500 text-base transition duration-500">Home</span>
@@ -27,7 +34,7 @@ const LoggedNavbar = () => {
           <div><TiMessages className='text-gray-500 text-2xl hover:text-teal-500 duration-500' /></div>
         </Link>
         <Link href="/profile">
-          <div><CgProfile className='text-gray-500 text-2xl hover:text-teal-500 duration-500' /></div>
+          <div><CgProfile className='text-gray-500 text-2xl hover:text-teal-500 duration-500 mr-8' /></div>
         </Link>
       </div>
       <div className="md:hidden flex items-center">
@@ -55,17 +62,17 @@ const LoggedNavbar = () => {
                 <FaTimes className="h-6 w-6 text-black" />
               </button>
             </div>
-            <div className="px-5 py-2">
+            <div className="px-5 py-2" onClick={closeMenu}>
               <Link href="/">
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Home</span>
               </Link>
-              <Link href="/bids">
+              <Link href="/bids" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Bids</span>
               </Link>
-              <Link href="/chat">
+              <Link href="/chat" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Chat</span>
               </Link>
-              <Link href="/profile">
+              <Link href="/profile" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Profile</span>
               </Link>
             </div>

@@ -7,11 +7,17 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="flex items-center justify-between p-4 shadow-md relative">
-      <div className="text-3xl font-bold text-teal-500">
-        QuickQuest
-      </div>
+      <Link href="/">
+        <div className="text-3xl font-bold text-teal-500">
+          QuickQuest
+        </div>
+      </Link>
       <div className="hidden md:flex space-x-10">
         <Link href="/">
           <span className="text-black hover:text-teal-500 text-base transition duration-500">Home</span>
@@ -55,16 +61,16 @@ const Navbar = () => {
               </button>
             </div>
             <div className="px-5 py-2">
-              <Link href="/">
+              <Link href="/" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Home</span>
               </Link>
-              <Link href="/bids">
+              <Link href="/bids" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Bids</span>
               </Link>
-              <Link href="/login">
+              <Link href="/login" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Login</span>
               </Link>
-              <Link href="/signup">
+              <Link href="/signup" onClick={closeMenu}>
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Sign-up</span>
               </Link>
               <div>

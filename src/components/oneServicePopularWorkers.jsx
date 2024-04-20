@@ -41,27 +41,27 @@ export default function OneServicePopularWorkers() {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 5,
+        slidesToShow: workers.length < 5 ? workers.length : 5, // Ensures the slider shows all workers if fewer than 5
         slidesToScroll: 1,
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 3,
+                    slidesToShow: workers.length < 3 ? workers.length : 3, // Show all workers if fewer than 3 for devices wider than 1024px
                     slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 768, // For tablets
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: workers.length < 2 ? workers.length : 2, // Show all workers if fewer than 2 for devices wider than 768px
                     slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 600, // For mobile
                 settings: {
-                    slidesToShow: 1,
+                    slidesToShow: 1, // Always show 1 worker on the smallest screens
                     slidesToScroll: 1
                 }
             }
@@ -103,7 +103,7 @@ export default function OneServicePopularWorkers() {
                         </div>
                     </div>
                 </div>
-            ) : workers.length < 5 ? (
+            ) : workers.length < 2 ? (
                 workers.map((worker, index) => (
                     <div key={index} className="px-4">
                         <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
