@@ -11,20 +11,10 @@ import { ThreeDots } from 'react-loader-spinner';
 import Swal from 'sweetalert2';
 import RatingComponent from '../../components/Rating';
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { useRouter } from 'next/navigation';
 
 const OrderCard = ({ order }) => {
-
   const [showRating, setShowRating] = useState(false);
-
-
-  const handleCompleteOrderRating = () => {
-    // You can implement whatever needs to happen before showing the rating
-    // For instance, setting loading states or completing an order process
-    setShowRating(true); // This will trigger the rating modal to appear
-  };
-
-
-
   const { _id, service, worker, orderedDate, deliveryDate, price } = order;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,23 +51,35 @@ const OrderCard = ({ order }) => {
   };
 
   const handleCompleteOrder = async () => {
-    setIsLoading(true);
-    const token = localStorage.getItem('token');
+    const confirmComplete = await Swal.fire({
+      title: 'Complete Order',
+      text: 'Are you sure you want to mark this order as complete?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, complete it!'
+    });
 
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs/complete/${_id}`, null, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+    if (confirmComplete.isConfirmed) {
+      setIsLoading(true);
+      const token = localStorage.getItem('token');
 
-      Swal.fire('Order Completed', response.data.message, 'success');
-      window.location.href = '/profile';
-    } catch (error) {
-      Swal.fire('Error', error.response.data.message, 'error');
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/jobs/complete/${_id}`, null, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        Swal.fire('Order Completed', response.data.message, 'success');
+        setShowRating(true);
+      } catch (error) {
+        Swal.fire('Error', error.response.data.message, 'error');
+      }
+
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -93,7 +95,7 @@ const OrderCard = ({ order }) => {
       <div className='flex md:mt-0 mt-2'>
         <button
           className="bg-teal-500 hover:bg-teal-800 duration-700 text-white py-1.5 px-4 rounded"
-          onClick={handleCompleteOrderRating}
+          onClick={handleCompleteOrder}
           disabled={isLoading}
         >
           Mark as Complete
@@ -108,12 +110,10 @@ const OrderCard = ({ order }) => {
               >
                 <IoMdCloseCircleOutline className='text-red-500 hover:text-red-700  text-3xl' />
               </button>
-              <RatingComponent />
-
+              <RatingComponent orderId={_id} />
             </div>
           </div>
         )}
-
 
         <button
           className="ml-2 bg-transparent hover:bg-red-500 text-red-500 duration-700 font-semibold hover:text-white py-1.5 px-4 border border-red-500 hover:border-transparent rounded"
@@ -146,7 +146,6 @@ const PastOrderCard = ({ order }) => {
         >
           {status === 'CANCELLED' ? 'Cancelled' : 'Delivered'}
         </button>
-
       </div>
     </div>
   );
@@ -158,6 +157,7 @@ const UserProfilePage = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -252,6 +252,25 @@ const UserProfilePage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: 'Logout',
+      text: 'Are you sure you want to log out?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log out',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href ='/';
+    }
+  };
+
   return (
     <>
       <AuthRoute>
@@ -276,7 +295,10 @@ const UserProfilePage = () => {
               </Link>
             </div>
             <div className="flex items-center justify-center mt-4">
-              <button className="w-32 bg-red-500 hover:bg-red-700 duration-700 text-white py-1.5 px-4 rounded">
+              <button
+                className="w-32 bg-red-500 hover:bg-red-700 duration-700 text-white py-1.5 px-4 rounded"
+                onClick={handleLogout}
+              >
                 Log Out
               </button>
             </div>
