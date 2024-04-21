@@ -88,7 +88,7 @@ export default function ChatWindow({ activeChat, onBack }) {
                         <button onClick={handleBack} className="text-teal-500 mr-2">
                             <IoChevronBack className='text-2xl' />
                         </button>
-                        <img className="w-10 h-10 rounded-full mr-2" src={activeChat.worker.profileImage} alt={`${activeChat.worker.firstName} ${activeChat.worker.lastName}`} />
+                        <img className="w-10 h-10 rounded-full mr-2 object-cover" src={activeChat.worker.profileImage} alt={`${activeChat.worker.firstName} ${activeChat.worker.lastName}`} />
                         <h2 className="font-semibold text-teal-900">{activeChat.worker.firstName} {activeChat.worker.lastName}</h2>
                     </div>
                     {/* Icons */}
