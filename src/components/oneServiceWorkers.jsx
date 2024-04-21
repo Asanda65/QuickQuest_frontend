@@ -54,7 +54,7 @@ export default function ServicePopularWorkers({ serviceId }) {
           const locationName = await getLocationName(latitude, longitude);
           names[worker._id] = locationName.split(',').slice(0, 2).join(',');
           resolve();
-        }, index * 2000);
+        }, index * 1000);
       });
     });
     await Promise.all(promises);
