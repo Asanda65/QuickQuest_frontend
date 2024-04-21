@@ -86,10 +86,11 @@ export default function Home() {
             onClick={() => router.push(`/workers?serviceId=${service._id}`)}
           >
             <img
-              src={service.imageUrl}
-              alt={service.name}
-              className="w-16 h-16 object-cover mr-4"
-            />
+            src={service.imageUrl}
+            alt={service.name}
+            style={{ borderRadius: '10px' }} // You can adjust the '10px' to get the desired curvature
+            className="w-16 h-16 object-cover mr-4 h-12 w-12 mb-4 sm:mb-0"
+          />
             <div>
               <h3 className="text-lg font-semibold">{service.name}</h3>
               <p className="text-gray-600">Starting from ${service.startingPrice}</p>
