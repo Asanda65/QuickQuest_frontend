@@ -36,7 +36,7 @@ export default function MobileChatSidebar({ chats, onSelectChat, activeChat }) {
                 {chats.map((chat) => (
                     <div key={chat._id} onClick={() => handleSelectChat(chat)} className={`flex items-center p-2 rounded cursor-pointer border-2 mt-2 ${selectedChat === chat._id ? 'border-teal-500' : 'border-transparent'} hover:border-teal-500`}>
 
-                        <img className="md:w-10 md:h-10 w-5 h-5 rounded-full mr-2" src={chat.worker.profileImage} alt={`${chat.worker.firstName} ${chat.worker.lastName}`} />
+                        <img className="md:w-10 md:h-10 w-5 h-5 rounded-full mr-2 object-cover" src={chat.worker.profileImage} alt={`${chat.worker.firstName} ${chat.worker.lastName}`} />
                         <div className="flex-grow ">
                             <div className="flex justify-between items-center">
                                 <span className="font-semibold" style={{ color: '#173735' }}>{chat.worker.firstName} {chat.worker.lastName}</span>

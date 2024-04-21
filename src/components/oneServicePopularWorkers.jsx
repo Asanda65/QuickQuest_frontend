@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,6 +11,7 @@ import { ThreeDots } from 'react-loader-spinner';
 export default function OneServicePopularWorkers() {
     const [workers, setWorkers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [locationNames, setLocationNames] = useState({});
     const searchParams = useSearchParams();
     const serviceId = searchParams.get('serviceId');
     const router = useRouter();
@@ -31,37 +32,70 @@ export default function OneServicePopularWorkers() {
         }
     };
 
+    const getLocationName = async (latitude, longitude) => {
+        try {
+            const geocodingUrl = `https://us1.locationiq.com/v1/reverse?key=${process.env.NEXT_PUBLIC_LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
+            const geocodingResponse = await fetch(geocodingUrl);
+            const geocodingData = await geocodingResponse.json();
+            return geocodingData.display_name || '';
+        } catch (error) {
+            console.error('Error fetching location name:', error);
+            return '';
+        }
+    };
+
+    const fetchLocationNames = async () => {
+        const names = {};
+        const promises = workers.map((worker, index) => {
+            return new Promise((resolve) => {
+                setTimeout(async () => {
+                    const { coordinates } = worker.location;
+                    const [longitude, latitude] = coordinates;
+                    const locationName = await getLocationName(latitude, longitude);
+                    names[worker._id] = locationName.split(',').slice(0, 2).join(',');
+                    resolve();
+                }, index * 2000);
+            });
+        });
+        await Promise.all(promises);
+        setLocationNames(names);
+    };
+
     useEffect(() => {
         if (serviceId) {
             fetchWorkers();
         }
     }, [serviceId]);
 
+    useEffect(() => {
+        fetchLocationNames();
+    }, [workers]);
+
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: workers.length < 5 ? workers.length : 5, // Ensures the slider shows all workers if fewer than 5
+        slidesToShow: workers.length < 5 ? workers.length : 5,
         slidesToScroll: 1,
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: workers.length < 3 ? workers.length : 3, // Show all workers if fewer than 3 for devices wider than 1024px
+                    slidesToShow: workers.length < 3 ? workers.length : 3,
                     slidesToScroll: 1,
                 }
             },
             {
-                breakpoint: 768, // For tablets
+                breakpoint: 768,
                 settings: {
-                    slidesToShow: workers.length < 2 ? workers.length : 2, // Show all workers if fewer than 2 for devices wider than 768px
+                    slidesToShow: workers.length < 2 ? workers.length : 2,
                     slidesToScroll: 1,
                 }
             },
             {
-                breakpoint: 600, // For mobile
+                breakpoint: 600,
                 settings: {
-                    slidesToShow: 1, // Always show 1 worker on the smallest screens
+                    slidesToShow: 1,
                     slidesToScroll: 1
                 }
             }
@@ -92,8 +126,10 @@ export default function OneServicePopularWorkers() {
                                     <FaStar key={i} className={i < workers[0].feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                                 ))}
                             </div>
-                            <p className="font-semibold text-base text-black mb-2">About Me:</p>
-                            <p className="text-gray-600 mb-4">{workers[0].aboutMe}</p>
+                            <div className="flex items-center justify-center mb-4">
+                                <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                                <p className="text-gray-600">{locationNames[workers[0]._id]}</p>
+                            </div>
                             <button
                                 className="bg-teal-500 text-white px-8 py-2 rounded-md"
                                 onClick={() => router.push(`/workerProfile?workerId=${workers[0]._id}`)}
@@ -120,8 +156,10 @@ export default function OneServicePopularWorkers() {
                                         <FaStar key={i} className={i < worker.feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                                     ))}
                                 </div>
-                                <p className="font-semibold text-base text-black mb-2">About Me:</p>
-                                <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
+                                <div className="flex items-center justify-center mb-4">
+                                    <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                                    <p className="text-gray-600">{locationNames[worker._id]}</p>
+                                </div>
                                 <button
                                     className="bg-teal-500 text-white px-8 py-2 rounded-md"
                                     onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}
@@ -150,8 +188,10 @@ export default function OneServicePopularWorkers() {
                                             <FaStar key={i} className={i < worker.feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                                         ))}
                                     </div>
-                                    <p className="font-semibold text-base text-black mb-2">About Me:</p>
-                                    <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
+                                    <div className="flex items-center justify-center mb-4">
+                                        <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                                        <p className="text-gray-600">{locationNames[worker._id]}</p>
+                                    </div>
                                     <button
                                         className="bg-teal-500 text-white px-8 py-2 rounded-md"
                                         onClick={() => router.push(`/workerProfile?workerId=${worker._id}`)}

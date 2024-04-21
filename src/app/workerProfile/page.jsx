@@ -126,7 +126,7 @@ const LabourPublicPage = () => {
               <img
                 src={worker.profileImage}
                 alt="Profile"
-                className="rounded-full h-20 w-20 object-cover mr-4"
+                className="rounded-full h-20 w-20 object-cover mr-4 object-cover"
               />
               <div>
                 <h2 className="text-lg font-medium text-black pb-2">

@@ -82,7 +82,7 @@ const OrderCard = ({ order }) => {
 
   return (
     <div className="flex flex-col sm:flex-row mt-4 mx-4 mx-20 items-center justify-between p-4 bg-white rounded text-black shadow" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
-      <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0" />
+      <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0 object-cover" />
       <span>{`${worker.firstName} ${worker.lastName}`}</span>
       <span className="flex items-center">
         <img src={service.category.iconUrl} alt="Task Icon" className="h-6 w-6 mr-2" />
@@ -131,7 +131,7 @@ const PastOrderCard = ({ order }) => {
   const { service, worker, orderedDate, deliveryDate, price, status } = order;
   return (
     <div className="flex flex-col sm:flex-row mt-4 mx-4 mx-20 items-center justify-between p-4 bg-white rounded text-black shadow" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
-      <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0" />
+      <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0 object-cover" />
       <span>{`${worker.firstName} ${worker.lastName}`}</span>
       <span className="flex items-center">
         <img src={service.category.iconUrl} alt="Task Icon" className="h-6 w-6 mr-2" />
@@ -262,7 +262,7 @@ const UserProfilePage = () => {
         )}
         {!isLoading && (
           <div className="text-black mt-6">
-            <img src={userProfile?.profileImage} alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center" />
+            <img src={userProfile?.profileImage} alt="User Name" className="rounded-full h-24 w-24 mx-auto text-center object-cover" />
             <h1 className="text-xl font-medium mt-4 text-center">{userProfile?.firstName} {userProfile?.lastName}</h1>
             <div className="flex items-center justify-center mt-1">
               <FaMapMarkerAlt className='text-teal-500 mr-1' />

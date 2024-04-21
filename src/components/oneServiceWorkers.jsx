@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
-import { FaStar } from 'react-icons/fa';
+import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from 'axios';
@@ -12,6 +12,7 @@ export default function ServicePopularWorkers({ serviceId }) {
   const [workers, setWorkers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState(null);
+  const [locationNames, setLocationNames] = useState({});
   const router = useRouter();
 
   const fetchWorkers = async (token, serviceId) => {
@@ -31,6 +32,35 @@ export default function ServicePopularWorkers({ serviceId }) {
     }
   };
 
+  const getLocationName = async (latitude, longitude) => {
+    try {
+      const geocodingUrl = `https://us1.locationiq.com/v1/reverse?key=${process.env.NEXT_PUBLIC_LOCATIONIQ_API_KEY}&lat=${latitude}&lon=${longitude}&format=json`;
+      const geocodingResponse = await fetch(geocodingUrl);
+      const geocodingData = await geocodingResponse.json();
+      return geocodingData.display_name || '';
+    } catch (error) {
+      console.error('Error fetching location name:', error);
+      return '';
+    }
+  };
+
+  const fetchLocationNames = async () => {
+    const names = {};
+    const promises = workers.map((worker, index) => {
+      return new Promise((resolve) => {
+        setTimeout(async () => {
+          const { coordinates } = worker.location;
+          const [longitude, latitude] = coordinates;
+          const locationName = await getLocationName(latitude, longitude);
+          names[worker._id] = locationName.split(',').slice(0, 2).join(',');
+          resolve();
+        }, index * 2000);
+      });
+    });
+    await Promise.all(promises);
+    setLocationNames(names);
+  };
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     setToken(storedToken);
@@ -40,31 +70,35 @@ export default function ServicePopularWorkers({ serviceId }) {
     }
   }, [serviceId]);
 
+  useEffect(() => {
+    fetchLocationNames();
+  }, [workers]);
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: workers.length < 5 ? workers.length : 5, // Ensures the slider shows all workers if fewer than 5
+    slidesToShow: workers.length < 5 ? workers.length : 5,
     slidesToScroll: 1,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: workers.length < 3 ? workers.length : 3, // Show all workers if fewer than 3 for devices wider than 1024px
+          slidesToShow: workers.length < 3 ? workers.length : 3,
           slidesToScroll: 1,
         }
       },
       {
-        breakpoint: 768, // For tablets
+        breakpoint: 768,
         settings: {
-          slidesToShow: workers.length < 2 ? workers.length : 2, // Show all workers if fewer than 2 for devices wider than 768px
+          slidesToShow: workers.length < 2 ? workers.length : 2,
           slidesToScroll: 1,
         }
       },
       {
-        breakpoint: 600, // For mobile
+        breakpoint: 600,
         settings: {
-          slidesToShow: 1, // Always show 1 worker on the smallest screens
+          slidesToShow: 1,
           slidesToScroll: 1
         }
       }
@@ -84,9 +118,7 @@ export default function ServicePopularWorkers({ serviceId }) {
         </div>
       ) : workers.length === 1 ? (
         <div className="px-4">
-          {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
           <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
-
             <img
               src={workers[0].profileImage}
               alt={`${workers[0].firstName} ${workers[0].lastName}`}
@@ -100,8 +132,10 @@ export default function ServicePopularWorkers({ serviceId }) {
                   <FaStar key={i} className={i < workers[0].feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                 ))}
               </div>
-              <p className="font-semibold text-base text-black mb-2">About Me:</p>
-              <p className="text-gray-600 mb-4">{workers[0].aboutMe}</p>
+              <div className="flex items-center justify-center mb-4">
+                <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                <p className="text-gray-600">{locationNames[workers[0]._id]}</p>
+              </div>
               <button
                 className="bg-teal-500 text-white px-8 py-2 rounded-md"
                 onClick={() => handleHireClick(workers[0]._id)}
@@ -114,7 +148,6 @@ export default function ServicePopularWorkers({ serviceId }) {
       ) : workers.length < 2 ? (
         workers.map((worker, index) => (
           <div key={index} className="px-4">
-            {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
             <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
               <img
                 src={worker.profileImage}
@@ -129,8 +162,10 @@ export default function ServicePopularWorkers({ serviceId }) {
                     <FaStar key={i} className={i < worker.feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                   ))}
                 </div>
-                <p className="font-semibold text-base text-black mb-2">About Me:</p>
-                <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
+                <div className="flex items-center justify-center mb-4">
+                  <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                  <p className="text-gray-600">{locationNames[worker._id]}</p>
+                </div>
                 <button
                   className="bg-teal-500 text-white px-8 py-2 rounded-md"
                   onClick={() => handleHireClick(worker._id)}
@@ -145,7 +180,6 @@ export default function ServicePopularWorkers({ serviceId }) {
         <Slider {...settings}>
           {workers.map((worker, index) => (
             <div key={index} className="px-4">
-              {/* <h2 className="text-lg font-medium mb-6 text-left pl-4 text-black">Recommended Workers around you</h2> */}
               <div className="bg-white rounded-lg shadow-md text-center relative mb-4">
                 <img
                   src={worker.profileImage}
@@ -160,8 +194,10 @@ export default function ServicePopularWorkers({ serviceId }) {
                       <FaStar key={i} className={i < worker.feedbackSummary.avgRating ? "text-yellow-400" : "text-gray-300"} />
                     ))}
                   </div>
-                  <p className="font-semibold text-base text-black mb-2">About Me:</p>
-                  <p className="text-gray-600 mb-4">{worker.aboutMe}</p>
+                  <div className="flex items-center justify-center mb-4">
+                    <FaMapMarkerAlt className="text-teal-500 text-xl mr-2" />
+                    <p className="text-gray-600">{locationNames[worker._id]}</p>
+                  </div>
                   <button
                     className="bg-teal-500 text-white px-8 py-2 rounded-md"
                     onClick={() => handleHireClick(worker._id)}

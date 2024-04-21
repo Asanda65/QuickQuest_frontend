@@ -126,14 +126,14 @@ export default function SSOSignup() {
             {/* Hidden file input */}
             <input type="file" id="imageUpload" className="hidden" onChange={handleImageUpload} />
             {/* Label wraps the profile picture and the overlay */}
-            <label htmlFor="imageUpload" className="cursor-pointer w-full h-full rounded-full">
+            <label htmlFor="imageUpload" className="cursor-pointer w-full h-full rounded-full object-cover">
               {/* Profile picture */}
               {imagePreview ? (
-                <img src={imagePreview} alt="Profile" className="w-full h-full rounded-full" />
+                <img src={imagePreview} alt="Profile" className="w-full h-full rounded-full object-cover" />
               ) : userProfile?.profileImage ? (
-                <img src={userProfile.profileImage} alt="Profile" className="w-full h-full rounded-full" />
+                <img src={userProfile.profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
               ) : (
-                <img src="/images/profile-icon.png" alt="Profile" className="w-full h-full rounded-full" />
+                <img src="/images/profile-icon.png" alt="Profile" className="w-full h-full rounded-full object-cover" />
               )}
               {/* Overlay */}
               <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
