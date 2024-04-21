@@ -3,15 +3,20 @@ import PopularServices from "../components/poplarServices";
 import Testimonials from "../components/Testimonial";
 import './globals.css';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import RecommendedServices from "@/components/RecommendedServices";
 import PopularWorkers from "@/components/popularWorkers";
+
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const [searchInput, setSearchInput] = useState('');
+  const [allServices, setAllServices] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -27,29 +32,77 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get('https://api.quick-quest.dfanso.dev/v1/services', {
+        headers: {
+          'accept': '*/*'
+        }
+      });
+      setAllServices(response.data);
+      setFilteredServices(response.data);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  };
 
   useEffect(() => {
     fetchCategories();
+    fetchServices();
   }, []);
 
   const isUserLoggedIn = () => {
     return localStorage.getItem('user') !== null;
   };
 
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+    const filtered = allServices.filter((service) =>
+      service.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
+      service.category.name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilteredServices(filtered);
+  };
+
   return (
     <>
-      <div className="">
-        <div className="flex justify-center items-center space-x-0 mt-4 py-6 md:py-8">
-          <input
-            type="text"
-            placeholder="What do you want to get done?"
-            className="p-2 w-2/4 md:w-1/4 border border-gray-400 rounded-l-lg text-sm md:text-base"
-          />
-          <button className="bg-teal-500 text-white font-medium px-6 py-2 rounded-r-lg border border-gray-400">
-            Find Workers
-          </button>
-        </div>
+     <div className="text-black">
+  <div className="flex justify-center items-center space-x-0 mt-4 py-6 md:py-8 relative">
+    <input
+      type="text"
+      placeholder="What do you want to get done?"
+      className="p-2 w-2/4 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/4 border border-gray-400 rounded-l-lg text-sm md:text-base h-10" // Added h-10 for a height of 40px
+      value={searchInput}
+      onChange={handleSearchInputChange}
+    />
+    {searchInput && (
+      <div className="absolute top-full left-0 right-0 sm:left-1/6 sm:right-1/6 md:left-1/4 md:right-1/4 lg:left-1/3 lg:right-1/3 xl:left-5/12 xl:right-5/12 bg-white border border-gray-400 rounded-b-lg shadow-lg z-10">
+        {filteredServices.map((service) => (
+          <div
+            key={service._id}
+            className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-100"
+            onClick={() => router.push(`/workers?serviceId=${service._id}`)}
+          >
+            <img
+              src={service.imageUrl}
+              alt={service.name}
+              className="w-16 h-16 object-cover mr-4"
+            />
+            <div>
+              <h3 className="text-lg font-semibold">{service.name}</h3>
+              <p className="text-gray-600">Starting from ${service.startingPrice}</p>
+              <p className="text-gray-500">{service.category.name}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+    <button className="bg-teal-500 text-white font-medium px-4 py-2 rounded-r-lg border border-gray-400 text-sm h-10"> {/* Added h-10 for a height of 40px */}
+      Find Workers
+    </button>
+  </div>
 
         {isLoading ? (
           <div className="flex items-center justify-center">
