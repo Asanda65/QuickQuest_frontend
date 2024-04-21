@@ -11,9 +11,9 @@ const Footer = () => {
                     <p className="mb-4">Our vision is to provide convenience and help increase your sales business.</p>
                     <div className="flex ">
                         <div className="flex">
-                            <img src='/images/facebook.svg'></img>
-                            <img src='/images/instagram.svg'></img>
-                            <img src='/images/twitter.svg'></img>
+                        <img src='https://task-trek.s3.ap-southeast-1.amazonaws.com/category/f898cd1f-b413-46a6-a5a6-eddb1d9658bc-Twitter.svg'></img>
+                            <img src='https://task-trek.s3.ap-southeast-1.amazonaws.com/category/23219a4f-6b24-48d6-951f-96b3fda404fc-Instagram.svg'></img>
+                            <img src='https://task-trek.s3.ap-southeast-1.amazonaws.com/category/f898cd1f-b413-46a6-a5a6-eddb1d9658bc-Twitter.svg'></img>
                         </div>
                     </div>
                 </div>
