@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import LocationPicker from '../../components/signupLocationInput'; // Adjust import if needed
 import { ThreeDots } from 'react-loader-spinner';
+import AuthRoute from '../(auth)/AuthRoute';
 
 export default function EditProfile() {
     const [profile, setProfile] = useState({
@@ -45,6 +46,7 @@ export default function EditProfile() {
 
 
     return (
+        <AuthRoute>
         <div className='flex flex-col items-center justify-center min-h-screen bg-gray-50 px-6'>
             <h1 className="text-lg font-medium text-black">Get Started</h1>
             <p className="text-center text-base my-2 mb-4" style={{ color: "#02615D" }}>Welcome to QuickQuest - lets create your account</p>
@@ -98,5 +100,6 @@ export default function EditProfile() {
                     </button></div>
             </form>
         </div>
+        </AuthRoute>
     );
 }
