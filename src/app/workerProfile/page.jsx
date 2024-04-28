@@ -75,6 +75,10 @@ const LabourPublicPage = () => {
     if (result.isConfirmed) {
 
       const storedUser = localStorage.getItem('user');
+      if (!storedUser)
+      {
+        window.location.href = '/login'
+      }
           const parsedUser = JSON.parse(storedUser);
 
       if (parsedUser) {

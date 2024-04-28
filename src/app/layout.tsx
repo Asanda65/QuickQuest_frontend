@@ -46,6 +46,7 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children }) =
     return <Loader />;
   }
 
+
   return (
     <>
       {user ? <LoggedNavbar /> : <Navbar />}

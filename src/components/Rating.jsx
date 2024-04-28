@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const RatingComponent = ({ orderId }) => {
+const RatingComponent = ({ orderId, onClose }) => {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState('');
@@ -31,7 +31,7 @@ const RatingComponent = ({ orderId }) => {
       };
 
       // Make the API request using Axios
-      const response = await axios.post('https://api.quick-quest.dfanso.dev/v1/feedback', feedbackData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/feedback`, feedbackData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -42,7 +42,10 @@ const RatingComponent = ({ orderId }) => {
       Swal.close();
 
       // Show success alert
-      Swal.fire('Success', 'Feedback submitted successfully!', 'success');
+      Swal.fire('Success', 'Feedback submitted successfully!', 'success').then(() => {
+        // Close the component after the success alert is closed
+        window.location.reload();
+      });
 
       // Reset the form
       setRating(0);

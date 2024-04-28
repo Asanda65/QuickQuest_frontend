@@ -128,23 +128,28 @@ const OrderCard = ({ order }) => {
 };
 
 const PastOrderCard = ({ order }) => {
-  const { service, worker, orderedDate, deliveryDate, price, status } = order;
+  const { service, worker, orderedDate, deliveryDate, price, status, _id } = order;
   return (
     <div className="flex flex-col sm:flex-row mt-4 mx-4 mx-20 items-center justify-between p-4 bg-white rounded text-black shadow" style={{ boxShadow: '0px 0px 4px 0px rgba(0, 0, 0, 0.25)', borderRadius: '5px' }}>
       <img src={worker.profileImage} alt={`${worker.firstName} ${worker.lastName}`} className="rounded-full h-12 w-12 mb-4 sm:mb-0 object-cover" />
       <span>{`${worker.firstName} ${worker.lastName}`}</span>
+      <span>Order ID: {_id}</span>
+
+      
+      
+      
       <span className="flex items-center">
         <img src={service.category.iconUrl} alt="Task Icon" className="h-6 w-6 mr-2" />
         {service.name}
       </span>
+      <span>Ordered on: {new Date(orderedDate).toLocaleDateString()}</span>
       <span>Due on {new Date(deliveryDate).toLocaleDateString()}</span>
       <span>${price}</span>
-      <div className='flex md:mt-0 mt-2'>
+      <div className="flex md:mt-0 mt-2">
         <button
-          className={`${status === 'CANCELLED' ? 'bg-red-500 ' : 'bg-teal-500'
-            }  text-white py-1.5 px-4 rounded`}
+          className={`${status === "CANCELLED" ? "bg-red-500 " : "bg-teal-500"} text-white py-1.5 px-4 rounded`}
         >
-          {status === 'CANCELLED' ? 'Cancelled' : 'Delivered'}
+          {status === "CANCELLED" ? "Cancelled" : "Delivered"}
         </button>
       </div>
     </div>
@@ -197,7 +202,10 @@ const UserProfilePage = () => {
       const geocodingResponse = await fetch(geocodingUrl);
       const geocodingData = await geocodingResponse.json();
 
-      const locationName = geocodingData.display_name || '';
+      const locationName = geocodingData.display_name
+      .split(",")
+      .slice(0, 4)
+      .join(", ");
 
       setUserProfile({ firstName, lastName, profileImage, longitude, latitude, locationName });
 

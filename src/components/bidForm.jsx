@@ -133,24 +133,29 @@ const BidForm = ({ category, services }) => {
           <span className="text-red-500">{errors.serviceType}</span>
         )}
         <div className="flex-grow">
-          <input
-            type="text"
-            name="budget"
-            placeholder={
-              formData.serviceType
-                ? `Minimum $${
-                    services.find(
-                      (service) => service.name === formData.serviceType
-                    ).startingPrice
-                  }`
-                : "Budget"
-            }
-            value={formData.budget}
-            onChange={handleChange}
-            className={`w-full bg-white p-2 rounded text-black focus:outline-none focus:ring-teal-500 focus:border-teal-500 ${
-              errors.budget ? "border-red-500" : ""
-            }`}
-          />
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span className="text-gray-500">$</span>
+            </div>
+            <input
+              type="text"
+              name="budget"
+              placeholder={
+                formData.serviceType
+                  ? `Minimum ${
+                      services.find(
+                        (service) => service.name === formData.serviceType
+                      ).startingPrice
+                    }`
+                  : "Budget"
+              }
+              value={formData.budget}
+              onChange={handleChange}
+              className={`w-full bg-white p-2 pl-7 rounded text-black focus:outline-none focus:ring-teal-500 focus:border-teal-500 ${
+                errors.budget ? "border-red-500" : ""
+              }`}
+            />
+          </div>
           {errors.budget && <span className="text-red-500">{errors.budget}</span>}
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center">

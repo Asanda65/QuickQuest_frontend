@@ -39,7 +39,8 @@ export default function ProfileHandler() {
           if (fetchedProfile.status === 'GOOGLEAUTH') {
             router.push('/ssoSignup');
           } else if (fetchedProfile.status === 'VERIFIED') {
-            router.push('/');
+            window.location.href = '/'
+            // router.push('/'); // use window.location.href = '/';
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);

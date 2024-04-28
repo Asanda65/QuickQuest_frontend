@@ -30,10 +30,12 @@ const Navbar = () => {
         </Link>
         <Link href="/signup">
           <span className="text-black hover:text-teal-500 text-base transition duration-500">Sign-up</span>
-        </Link>
+        </Link >
+        <Link href="https://worker-quick-quest.vercel.app/signup">
         <button className="bg-teal-500 text-white px-6 py-1 text-base rounded-2xl">
           Join Us
         </button>
+        </Link>
       </div>
       <div className="md:hidden flex items-center">
         {!isMenuOpen && (
@@ -74,9 +76,11 @@ const Navbar = () => {
                 <span className="text-black hover:text-teal-500 block px-3 py-2 text-xl font-medium">Sign-up</span>
               </Link>
               <div>
+              <Link href="https://worker-quick-quest.vercel.app/signup">
                 <button className="bg-teal-500 text-white block w-full px-5 py-3 text-lg md:text-xl mt-6 md:mt-0 rounded-2xl">
                   Join Us
                 </button>
+                </Link>
               </div>
             </div>
           </div>

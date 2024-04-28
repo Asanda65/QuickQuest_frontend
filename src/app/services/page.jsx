@@ -68,7 +68,7 @@ export default function LabourPageServices() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         </div>
 
-                        <h2 className="text-lg pl-4 font-medium text-left text-black mt-8">Categories</h2>
+                        <h2 className="text-lg pl-4 font-medium text-left text-black mt-8">Services</h2>
                         <div className="block md:hidden md:mb-0 mb-6">
                             <Slider {...sliderSettings}>
                                 {services.map((service, index) => (

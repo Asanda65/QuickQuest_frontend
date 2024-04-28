@@ -12,7 +12,7 @@ const PaymentSuccess = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 10000); // 10 seconds delay
+    }, 15000); // 10 seconds delay
 
     return () => clearTimeout(timer); // Clean up the timer on unmount
   }, []);

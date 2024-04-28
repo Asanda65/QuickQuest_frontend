@@ -8,6 +8,7 @@ import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import RecommendedServices from "@/components/RecommendedServices";
 import PopularWorkers from "@/components/popularWorkers";
+import Link from 'next/link';
 
 export default function Home() {
   const [categories, setCategories] = useState([]);
@@ -17,6 +18,32 @@ export default function Home() {
   const [searchInput, setSearchInput] = useState('');
   const [allServices, setAllServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      return;
+    }
+  
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/v1/auth/profile`, {
+        headers: {
+          'Accept': '*/*',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+    } catch (error) {
+      window.location.reload();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  };
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -200,9 +227,11 @@ export default function Home() {
             our network of talented freelancers is ready to bring your vision to life.
           </p>
           <div className="text-right">
+          <Link href="https://worker-quick-quest.vercel.app/signup">
             <button className="bg-white text-teal-500 font-bold py-3 px-4 rounded-lg">
               Become a quester
             </button>
+            </Link>
           </div>
         </div>
       </div>
